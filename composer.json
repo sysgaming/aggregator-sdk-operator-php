@@ -1,0 +1,19 @@
+{
+    "name": "sysgaming/aggregator-sdk-php",
+    "description": "PHP SDK for Aggregator of Sysgaming",
+    "type": "library",
+    "license": "GPL",
+    "autoload": {
+        "psr-4": {
+            "Sysgaming\\AggregatorSdkPhp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bruno Jorge Kosloski",
+            "email": "brunojk@sysgaming.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
