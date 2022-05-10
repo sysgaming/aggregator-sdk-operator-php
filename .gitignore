@@ -11,15 +11,8 @@
 # OSX
 .DS_Store
 
-# Vim
-*.swp
-*.swo
-
 # Local environment
 .env
-
-# IDE Logs
-hs_err_pid*.log
 
 # Temp
 .temp
