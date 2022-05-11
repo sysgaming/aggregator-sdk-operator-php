@@ -16,3 +16,7 @@
 
 # Temp
 .temp
+
+composer.lock
+
+vendor/
