@@ -1,6 +1,6 @@
 <?php
 
-namespace Sysgaming\AggregatorSdkPhp;
+namespace Sysgaming\AggregatorSdkPhp\Control;
 
 use Exception;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
@@ -26,6 +26,8 @@ interface AggregatorController {
 
     const SIGNATURE_INBOUND_HEADER_NAME = 'X-Aggregator-Signature';
     const SIGNATURE_OUTBOUND_HEADER_NAME = 'X-Operator-Signature';
+
+    const CURRENCY_MULTIPLIER = 1000000;
 
     /**
      * @param AggregatorHttpOutboundRequest $request

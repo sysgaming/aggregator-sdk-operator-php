@@ -8,8 +8,6 @@ class AggregatorStartPlaying
     const GAME_MODE_FOR_FUN = "FOR_FUN";
     const GAME_MODE_FOR_REAL = "FOR_REAL";
 
-    const CURRENCY_MULTIPLIER = 1000000;
-
     /**
      * @var string
      */

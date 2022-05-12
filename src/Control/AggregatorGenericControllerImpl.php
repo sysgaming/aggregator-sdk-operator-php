@@ -1,19 +1,13 @@
 <?php
 
-namespace Sysgaming\AggregatorSdkPhp;
+namespace Sysgaming\AggregatorSdkPhp\Control;
 
 use Exception;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
-use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
-use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
-use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorRollback;
-use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorWin;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
-use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\ExceptionDTO;

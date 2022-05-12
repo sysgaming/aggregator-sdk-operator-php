@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sysgaming\AggregatorSdkPhp\Mappers\Impls;
-
 
 use Exception;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
