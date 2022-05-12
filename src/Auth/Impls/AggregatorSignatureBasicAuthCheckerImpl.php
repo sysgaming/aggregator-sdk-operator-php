@@ -2,41 +2,40 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Auth\Impls;
 
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorRequestSignatureHolder;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidSignatureException;
 
 class AggregatorSignatureBasicAuthCheckerImpl implements AggregatorSignatureChecker
 {
 
-    private $signatureHolder;
     private $credentialId;
     private $credentialValue;
 
     /**
      * AggregatorSignatureCheckerImpl constructor.
-     * @param $signatureHolder AggregatorRequestSignatureHolder
      * @param $credentialId string
      * @param $credentialValue string
      */
-    public function __construct($signatureHolder, $credentialId, $credentialValue)
+    public function __construct($credentialId, $credentialValue)
     {
-        $this->signatureHolder = $signatureHolder;
         $this->credentialId = $credentialId;
         $this->credentialValue = $credentialValue;
     }
 
-
     /**
-     * @param $payload string
+     * @param $request AggregatorHttpInboundRequest
      * @throws AggregatorGamingException
      */
-    function validate($payload)
+    function validate($request)
     {
 
-        $user = $this->signatureHolder->getUser();
-        $password = $this->signatureHolder->getPassword();
+        $signatureHolder = $request->getSignatureHolder();
+
+        $user = $signatureHolder->getUser();
+        $password = $signatureHolder->getPassword();
 
         if(
             !$user || !$password

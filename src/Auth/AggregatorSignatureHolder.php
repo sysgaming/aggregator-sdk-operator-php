@@ -4,7 +4,7 @@
 namespace Sysgaming\AggregatorSdkPhp\Auth;
 
 
-class AggregatorRequestSignatureHolder
+class AggregatorSignatureHolder
 {
 
     private $signature;
@@ -21,7 +21,7 @@ class AggregatorRequestSignatureHolder
 
     /**
      * @param mixed $signature
-     * @return AggregatorRequestSignatureHolder
+     * @return AggregatorSignatureHolder
      */
     public function setSignature($signature)
     {
@@ -39,7 +39,7 @@ class AggregatorRequestSignatureHolder
 
     /**
      * @param mixed $user
-     * @return AggregatorRequestSignatureHolder
+     * @return AggregatorSignatureHolder
      */
     public function setUser($user)
     {
@@ -57,7 +57,7 @@ class AggregatorRequestSignatureHolder
 
     /**
      * @param mixed $password
-     * @return AggregatorRequestSignatureHolder
+     * @return AggregatorSignatureHolder
      */
     public function setPassword($password)
     {

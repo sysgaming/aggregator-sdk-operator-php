@@ -24,7 +24,7 @@ class AggregatorExceptionMapperImpl implements AggregatorExceptionMapper
         if( $exception instanceof AggregatorGamingException) {
 
             $dto
-                ->setRequestUUID($exception->getRequestUUID())
+                ->setRequestUUID($requestUUID)
                 ->setMessage($exception->getMessage())
                 ->setType(StringUtils::camelToSnake(get_class($exception)));
 

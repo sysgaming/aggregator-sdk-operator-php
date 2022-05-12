@@ -2,14 +2,15 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Auth;
 
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 
 interface AggregatorSignatureChecker {
 
     /**
-     * @param $payload string
+     * @param $request AggregatorHttpInboundRequest
      * @throws AggregatorGamingException
      */
-    function validate($payload);
+    function validate($request);
 
 }

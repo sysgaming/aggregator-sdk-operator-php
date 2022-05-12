@@ -10,12 +10,16 @@ use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorRollback;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorWin;
-use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpRequest;
-use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpResponse;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\ExceptionDTO;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
+use Sysgaming\AggregatorSdkPhp\Helpers\Base64Handler;
+use Sysgaming\AggregatorSdkPhp\Helpers\JsonHandler;
+use Sysgaming\AggregatorSdkPhp\Mappers\AggregatorExceptionMapper;
 use Sysgaming\AggregatorSdkPhp\Mappers\AggregatorGamingMapper;
 
 interface AggregatorController {
@@ -24,10 +28,18 @@ interface AggregatorController {
     const SIGNATURE_OUTBOUND_HEADER_NAME = 'X-Operator-Signature';
 
     /**
-     * @param AggregatorHttpRequest $request
-     * @return AggregatorHttpResponse
+     * @param AggregatorHttpOutboundRequest $request
+     * @return AggregatorHttpOutboundResponse
      */
-    function doHttpPost(AggregatorHttpRequest $request);
+    function doHttpPost(AggregatorHttpOutboundRequest $request);
+
+    /**
+     * @param $aggregatorEndpoint string
+     * @param $payload string
+     * @param $encodedSignature string
+     * @return AggregatorHttpOutboundRequest
+     */
+    function makeAggregatorRequest($aggregatorEndpoint, $payload, $encodedSignature);
 
     /**
      * @param AggregatorStartPlaying $startPlaying
@@ -36,32 +48,28 @@ interface AggregatorController {
     function buildGameUrl(AggregatorStartPlaying $startPlaying);
 
     /**
-     * @param $payload string
-     * @param $signature string
+     * @param $request AggregatorHttpInboundRequest
      * @return AggregatorBalanceResponse|ExceptionDTO
      */
-    function balanceFromRequest($payload, $signature);
+    function balanceFromRequest($request);
 
     /**
-     * @param $payload string
-     * @param $signature string
+     * @param $request AggregatorHttpInboundRequest
      * @return AggregatorBalanceResponse|ExceptionDTO
      */
-    function betFromRequest($payload, $signature);
+    function betFromRequest($request);
 
     /**
-     * @param $payload string
-     * @param $signature string
+     * @param $request AggregatorHttpInboundRequest
      * @return AggregatorBalanceResponse|ExceptionDTO
      */
-    function winFromRequest($payload, $signature);
+    function winFromRequest($request);
 
     /**
-     * @param $payload string
-     * @param $signature string
+     * @param $request AggregatorHttpInboundRequest
      * @return AggregatorBalanceResponse|ExceptionDTO
      */
-    function rollbackFromRequest($payload, $signature);
+    function rollbackFromRequest($request);
 
     /**
      * @param AggregatorBalance $balance
@@ -92,28 +100,19 @@ interface AggregatorController {
     function handleRollback(AggregatorRollback $rollback);
 
     /**
-     * @param array|object
-     * @return string
+     * @return JsonHandler
      */
-    function jsonEncode($value);
+    function getJsonHandler();
 
     /**
-     * @param $raw
-     * @return array
+     * @return Base64Handler
      */
-    function jsonDecode($raw);
+    function getBase64Handler();
 
     /**
-     * @param $str
-     * @return string
+     * @return AggregatorExceptionMapper
      */
-    function base64Encode($str);
-
-    /**
-     * @param $str
-     * @return string
-     */
-    function base64Decode($str);
+    function getExceptionMapper();
 
     /**
      * @return AggregatorGamingMapper

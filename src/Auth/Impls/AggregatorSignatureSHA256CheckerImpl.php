@@ -2,37 +2,37 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Auth\Impls;
 
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorRequestSignatureHolder;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidSignatureException;
 
 class AggregatorSignatureSHA256CheckerImpl implements AggregatorSignatureChecker
 {
 
-    private $signatureHolder;
     private $secret;
 
     /**
      * AggregatorSignatureCheckerImpl constructor.
-     * @param $signatureHolder AggregatorRequestSignatureHolder
      * @param $secret
      */
-    public function __construct($signatureHolder, $secret)
+    public function __construct($secret)
     {
-        $this->signatureHolder = $signatureHolder;
         $this->secret = $secret;
     }
 
-
     /**
-     * @param $payload string
+     * @param $request AggregatorHttpInboundRequest
      * @throws AggregatorGamingException
      */
-    function validate($payload)
+    function validate($request)
     {
 
-        $signature = $this->signatureHolder->getSignature();
+        $payload = $request->getContents();
+        $signatureHolder = $request->getSignatureHolder();
+
+        $signature = $signatureHolder->getSignature();
 
         if( !$signature || hash('sha256', $payload . "." . $this->secret) != $signature )
             throw new InvalidSignatureException();

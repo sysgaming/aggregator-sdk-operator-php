@@ -2,7 +2,7 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Auth\Impls;
 
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorRequestSignatureHolder;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;

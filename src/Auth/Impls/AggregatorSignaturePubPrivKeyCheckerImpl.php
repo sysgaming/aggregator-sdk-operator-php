@@ -2,37 +2,37 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Auth\Impls;
 
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorRequestSignatureHolder;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidSignatureException;
 
 class AggregatorSignaturePubPrivKeyCheckerImpl implements AggregatorSignatureChecker
 {
 
-    private $signatureHolder;
     private $strPublicKey;
 
     /**
      * AggregatorSignatureCheckerImpl constructor.
-     * @param $signatureHolder AggregatorRequestSignatureHolder
      * @param $strPublicKey string
      */
-    public function __construct($signatureHolder, $strPublicKey)
+    public function __construct($strPublicKey)
     {
-        $this->signatureHolder = $signatureHolder;
         $this->strPublicKey = $strPublicKey;
     }
 
-
     /**
-     * @param $payload string
+     * @param $request AggregatorHttpInboundRequest
      * @throws AggregatorGamingException
      */
-    function validate($payload)
+    function validate($request)
     {
 
-        $signature = $this->signatureHolder->getSignature();
+        $payload = $request->getContents();
+        $signatureHolder = $request->getSignatureHolder();
+
+        $signature = $signatureHolder->getSignature();
 
         if( !$signature )
             throw new InvalidSignatureException();

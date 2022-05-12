@@ -4,96 +4,64 @@ namespace Sysgaming\AggregatorSdkPhp\Dtos\Outbound;
 
 class AggregatorStartPlaying
 {
-    private $requestUUID;
-    private $transactionId;
-    private $token;
+
+    const GAME_MODE_FOR_FUN = "FOR_FUN";
+    const GAME_MODE_FOR_REAL = "FOR_REAL";
+
+    const CURRENCY_MULTIPLIER = 1000000;
+
+    /**
+     * @var string
+     */
     private $playerId;
-    private $roundId;
-    private $amount;
+
+    /**
+     * @var string
+     */
+    private $playerName;
+
+    /**
+     * @var string
+     */
+    private $token;
+
+    /**
+     * @var string
+     */
     private $currency;
+
+    /**
+     * @var string
+     */
+    private $initialBalance;
+
+    /**
+     * @var string
+     */
     private $productCode;
 
-    protected $payload;
-
     /**
-     * AggregatorBet constructor.
-     * @param $requestUUID
-     * @param $transactionId
-     * @param $token
-     * @param $playerId
-     * @param $roundId
-     * @param $amount
-     * @param $currency
-     * @param $productCode
+     * @var string
      */
-    public function __construct($requestUUID, $transactionId, $token, $playerId, $roundId, $amount, $currency, $productCode)
-    {
-        $this->requestUUID = $requestUUID;
-        $this->transactionId = $transactionId;
-        $this->token = $token;
-        $this->playerId = $playerId;
-        $this->roundId = $roundId;
-        $this->amount = $amount;
-        $this->currency = $currency;
-        $this->productCode = $productCode;
-    }
+    private $gameMode;
 
     /**
-     * @return mixed
+     * @var string
      */
-    public function getRequestUUID()
-    {
-        return $this->requestUUID;
-    }
+    private $language;
 
     /**
-     * @param mixed $requestUUID
-     * @return AggregatorStartPlaying
+     * @var string
      */
-    public function setRequestUUID($requestUUID)
-    {
-        $this->requestUUID = $requestUUID;
-        return $this;
-    }
+    private $country;
 
     /**
-     * @return mixed
+     * @var AggregatorRedirectUrls
      */
-    public function getTransactionId()
-    {
-        return $this->transactionId;
-    }
+    private $redirectURLs;
 
     /**
-     * @param mixed $transactionId
-     * @return AggregatorStartPlaying
-     */
-    public function setTransactionId($transactionId)
-    {
-        $this->transactionId = $transactionId;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
-     * @param mixed $token
-     * @return AggregatorStartPlaying
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-        return $this;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getPlayerId()
     {
@@ -101,7 +69,7 @@ class AggregatorStartPlaying
     }
 
     /**
-     * @param mixed $playerId
+     * @param string $playerId
      * @return AggregatorStartPlaying
      */
     public function setPlayerId($playerId)
@@ -111,43 +79,43 @@ class AggregatorStartPlaying
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getRoundId()
+    public function getPlayerName()
     {
-        return $this->roundId;
+        return $this->playerName;
     }
 
     /**
-     * @param mixed $roundId
+     * @param string $playerName
      * @return AggregatorStartPlaying
      */
-    public function setRoundId($roundId)
+    public function setPlayerName($playerName)
     {
-        $this->roundId = $roundId;
+        $this->playerName = $playerName;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getAmount()
+    public function getToken()
     {
-        return $this->amount;
+        return $this->token;
     }
 
     /**
-     * @param mixed $amount
+     * @param string $token
      * @return AggregatorStartPlaying
      */
-    public function setAmount($amount)
+    public function setToken($token)
     {
-        $this->amount = $amount;
+        $this->token = $token;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCurrency()
     {
@@ -155,7 +123,7 @@ class AggregatorStartPlaying
     }
 
     /**
-     * @param mixed $currency
+     * @param string $currency
      * @return AggregatorStartPlaying
      */
     public function setCurrency($currency)
@@ -165,7 +133,25 @@ class AggregatorStartPlaying
     }
 
     /**
-     * @return mixed
+     * @return string
+     */
+    public function getInitialBalance()
+    {
+        return $this->initialBalance;
+    }
+
+    /**
+     * @param string $initialBalance
+     * @return AggregatorStartPlaying
+     */
+    public function setInitialBalance($initialBalance)
+    {
+        $this->initialBalance = $initialBalance;
+        return $this;
+    }
+
+    /**
+     * @return string
      */
     public function getProductCode()
     {
@@ -173,7 +159,7 @@ class AggregatorStartPlaying
     }
 
     /**
-     * @param mixed $productCode
+     * @param string $productCode
      * @return AggregatorStartPlaying
      */
     public function setProductCode($productCode)
@@ -183,19 +169,75 @@ class AggregatorStartPlaying
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPayload()
+    public function getGameMode()
     {
-        return $this->payload;
+        return $this->gameMode;
     }
 
     /**
-     * @param mixed $payload
+     * @param string $gameMode
+     * @return AggregatorStartPlaying
      */
-    public function setPayload($payload)
+    public function setGameMode($gameMode)
     {
-        $this->payload = $payload;
+        $this->gameMode = $gameMode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     * @return AggregatorStartPlaying
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     * @return AggregatorStartPlaying
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return AggregatorRedirectUrls
+     */
+    public function getRedirectURLs()
+    {
+        return $this->redirectURLs;
+    }
+
+    /**
+     * @param AggregatorRedirectUrls $redirectURLs
+     * @return AggregatorStartPlaying
+     */
+    public function setRedirectURLs($redirectURLs)
+    {
+        $this->redirectURLs = $redirectURLs;
+        return $this;
     }
 
 }
