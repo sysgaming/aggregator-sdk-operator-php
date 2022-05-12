@@ -243,9 +243,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
     private function extractRequestUUID(array $jsonContents)
     {
 
-        return array_key_exists('requestUUID', $jsonContents)
-            ? $jsonContents['requestUUID']
-            : null;
+        return array_key_exists('requestUUID', $jsonContents) ? $jsonContents['requestUUID'] : null;
 
     }
 
