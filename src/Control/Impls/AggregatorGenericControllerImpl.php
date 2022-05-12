@@ -3,7 +3,7 @@
 namespace Sysgaming\AggregatorSdkPhp\Control\Impls;
 
 use Exception;
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayer;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayerWallet;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Control\AggregatorController;
@@ -14,6 +14,9 @@ use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\ExceptionDTO;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\CurrencyNotSupportedException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidTokenException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\UserCantPlayException;
 use Sysgaming\AggregatorSdkPhp\Helpers\ArrayUtils;
 use Sysgaming\AggregatorSdkPhp\Helpers\Base64Handler;
 use Sysgaming\AggregatorSdkPhp\Helpers\JsonHandler;
@@ -133,6 +136,15 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $player = $this->getPlayerFromToken(ArrayUtils::get('token', $jsonContents));
 
+            if( !$player )
+                throw new InvalidTokenException();
+
+            if( !$player->canPlay() )
+                throw new UserCantPlayException();
+
+            if( !$player->isAValidCurrency() )
+                throw new CurrencyNotSupportedException();
+
             return $handler($jsonContents, $player);
 
         } catch (Exception $ex) {
@@ -147,7 +159,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function balanceFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
 
             $dto = $this->getGamingMapper()->balanceFromRequest($jsonContents);
 
@@ -159,7 +171,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function betFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
 
             $dto = $this->getGamingMapper()->betFromRequest($jsonContents);
 
@@ -171,7 +183,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function winFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
 
             $dto = $this->getGamingMapper()->winFromRequest($jsonContents);
 
@@ -183,7 +195,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function rollbackFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
 
             $dto = $this->getGamingMapper()->rollbackFromRequest($jsonContents);
 
@@ -200,27 +212,18 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
-    /**
-     * @return AggregatorGamingMapper
-     */
     function getGamingMapper() {
 
         return $this->gamingMapper;
 
     }
 
-    /**
-     * @return AggregatorSignatureChecker
-     */
     function getSignatureChecker() {
 
         return $this->signatureChecker;
 
     }
 
-    /**
-     * @return AggregatorSignatureMaker
-     */
     function getSignatureMaker() {
 
         return $this->signatureMaker;

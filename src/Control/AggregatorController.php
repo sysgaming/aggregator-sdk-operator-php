@@ -3,7 +3,7 @@
 namespace Sysgaming\AggregatorSdkPhp\Control;
 
 use Exception;
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayer;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayerWallet;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
@@ -76,39 +76,39 @@ interface AggregatorController {
 
     /**
      * @param AggregatorBalance $balance
-     * @param AggregatorPlayer $player
+     * @param AggregatorPlayerWallet $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleBalance(AggregatorBalance $balance, AggregatorPlayer $player);
+    function handleBalance(AggregatorBalance $balance, AggregatorPlayerWallet $player);
 
     /**
      * @param AggregatorBet $bet
-     * @param AggregatorPlayer $player
+     * @param AggregatorPlayerWallet $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleBet(AggregatorBet $bet, AggregatorPlayer $player);
+    function handleBet(AggregatorBet $bet, AggregatorPlayerWallet $player);
 
     /**
      * @param AggregatorWin $win
-     * @param AggregatorPlayer $player
+     * @param AggregatorPlayerWallet $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleWin(AggregatorWin $win, AggregatorPlayer $player);
+    function handleWin(AggregatorWin $win, AggregatorPlayerWallet $player);
 
     /**
      * @param AggregatorRollback $rollback
-     * @param AggregatorPlayer $player
+     * @param AggregatorPlayerWallet $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleRollback(AggregatorRollback $rollback, AggregatorPlayer $player);
+    function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player);
 
     /**
      * @param $token
-     * @return AggregatorPlayer
+     * @return AggregatorPlayerWallet
      */
     function getPlayerFromToken($token);
 
