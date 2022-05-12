@@ -5,7 +5,7 @@ namespace Sysgaming\AggregatorSdkPhp\Auth;
 interface AggregatorSignatureMaker {
 
     /**
-     * @param $payload
+     * @param $payload string
      * @return string
      */
     function sign($payload);

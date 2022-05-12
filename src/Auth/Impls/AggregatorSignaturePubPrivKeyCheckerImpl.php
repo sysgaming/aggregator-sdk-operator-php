@@ -11,17 +11,17 @@ class AggregatorSignaturePubPrivKeyCheckerImpl implements AggregatorSignatureChe
 {
 
     private $signatureHolder;
-    private $publicKey;
+    private $strPublicKey;
 
     /**
      * AggregatorSignatureCheckerImpl constructor.
      * @param $signatureHolder AggregatorRequestSignatureHolder
-     * @param $publicKey string
+     * @param $strPublicKey string
      */
-    public function __construct($signatureHolder, $publicKey)
+    public function __construct($signatureHolder, $strPublicKey)
     {
         $this->signatureHolder = $signatureHolder;
-        $this->publicKey = $publicKey;
+        $this->strPublicKey = $strPublicKey;
     }
 
 
@@ -37,7 +37,7 @@ class AggregatorSignaturePubPrivKeyCheckerImpl implements AggregatorSignatureChe
         if( !$signature )
             throw new InvalidSignatureException();
 
-        $openPublicKey = openssl_pkey_get_public($this->publicKey);
+        $openPublicKey = openssl_pkey_get_public($this->strPublicKey);
 
         $valid = openssl_verify($payload, $signature, $openPublicKey, 'RSA-SHA256');
 
