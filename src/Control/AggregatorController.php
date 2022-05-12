@@ -3,6 +3,7 @@
 namespace Sysgaming\AggregatorSdkPhp\Control;
 
 use Exception;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayer;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
@@ -75,31 +76,41 @@ interface AggregatorController {
 
     /**
      * @param AggregatorBalance $balance
+     * @param AggregatorPlayer $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleBalance(AggregatorBalance $balance);
+    function handleBalance(AggregatorBalance $balance, AggregatorPlayer $player);
 
     /**
      * @param AggregatorBet $bet
+     * @param AggregatorPlayer $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleBet(AggregatorBet $bet);
+    function handleBet(AggregatorBet $bet, AggregatorPlayer $player);
 
     /**
      * @param AggregatorWin $win
+     * @param AggregatorPlayer $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleWin(AggregatorWin $win);
+    function handleWin(AggregatorWin $win, AggregatorPlayer $player);
 
     /**
      * @param AggregatorRollback $rollback
+     * @param AggregatorPlayer $player
      * @return AggregatorBalanceResponse
      * @throws AggregatorGamingException|Exception
      */
-    function handleRollback(AggregatorRollback $rollback);
+    function handleRollback(AggregatorRollback $rollback, AggregatorPlayer $player);
+
+    /**
+     * @param $token
+     * @return AggregatorPlayer
+     */
+    function getPlayerFromToken($token);
 
     /**
      * @return JsonHandler

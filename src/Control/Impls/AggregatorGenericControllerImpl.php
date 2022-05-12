@@ -1,10 +1,12 @@
 <?php
 
-namespace Sysgaming\AggregatorSdkPhp\Control;
+namespace Sysgaming\AggregatorSdkPhp\Control\Impls;
 
 use Exception;
+use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayer;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
+use Sysgaming\AggregatorSdkPhp\Control\AggregatorController;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
@@ -12,6 +14,7 @@ use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\ExceptionDTO;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
+use Sysgaming\AggregatorSdkPhp\Helpers\ArrayUtils;
 use Sysgaming\AggregatorSdkPhp\Helpers\Base64Handler;
 use Sysgaming\AggregatorSdkPhp\Helpers\JsonHandler;
 use Sysgaming\AggregatorSdkPhp\Mappers\AggregatorExceptionMapper;
@@ -114,12 +117,13 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
+
     /**
      * @param $request AggregatorHttpInboundRequest
-     * @param $handler callable
+     * @param callable $handler
      * @return AggregatorBalanceResponse|ExceptionDTO
      */
-    protected function handleRequest($request, $handler) {
+    protected function handleRequest($request, callable $handler) {
 
         $jsonContents = $this->getJsonHandler()->jsonDecode($request->getContents());
 
@@ -127,7 +131,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $this->getSignatureChecker()->validate($request);
 
-            return $handler($jsonContents);
+            $player = $this->getPlayerFromToken(ArrayUtils::get('token', $jsonContents));
+
+            return $handler($jsonContents, $player);
 
         } catch (Exception $ex) {
 
@@ -141,11 +147,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function balanceFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
 
             $dto = $this->getGamingMapper()->balanceFromRequest($jsonContents);
 
-            return $this->handleBalance($dto);
+            return $this->handleBalance($dto, $player);
 
         });
 
@@ -153,11 +159,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function betFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
 
             $dto = $this->getGamingMapper()->betFromRequest($jsonContents);
 
-            return $this->handleBet($dto);
+            return $this->handleBet($dto, $player);
 
         });
 
@@ -165,11 +171,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function winFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
 
             $dto = $this->getGamingMapper()->winFromRequest($jsonContents);
 
-            return $this->handleWin($dto);
+            return $this->handleWin($dto, $player);
 
         });
 
@@ -177,11 +183,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function rollbackFromRequest($request) {
 
-        return $this->handleRequest($request, function(array $jsonContents) {
+        return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayer $player) {
 
             $dto = $this->getGamingMapper()->rollbackFromRequest($jsonContents);
 
-            return $this->handleRollback($dto);
+            return $this->handleRollback($dto, $player);
 
         });
 
