@@ -20,7 +20,11 @@ Apesar de este SDK ter sido implementado de forma mais "standard" possível, ou 
 
 # Utilização
 
-Basicamente a utilização deste SDK se dá pela implementação da interface `AggregatorController`. Ela é responsável por definir como a comunicação com o Agregador deve ser feita e com quais dados. A implementação deve suprir todos os métodos descritos na interface, porém existe uma implementação base que abstrai alguns métodos desta interface `AggregatorGenericControllerImpl` o que torna necessário a implementação de ao menos 6 métodos obrigatórios, segue um exemplo:
+Basicamente a utilização deste SDK se dá pela implementação da interface `AggregatorController`. Ela é responsável por definir como a comunicação com o Agregador deve ser feita e com quais dados. 
+
+**Atenção**: é nessário que o Operador crie/configure rotas/endpoints em sua aplicação de acordo com a Documentação para Operadores (TODO link da doc). E dentro de cada método que aceita as requisições dessas rotas/endpoints o Operador deve utilizar a implementação do `AggregatorController` descrita anteriormente. Este SDK não cria/configura nenhuma rota/endpoint.
+
+A implementação deve suprir todos os métodos descritos na interface, porém existe uma implementação base que abstrai alguns métodos desta interface `AggregatorGenericControllerImpl` o que torna necessário a implementação de ao menos 6 métodos obrigatórios, segue um exemplo:
 
 ``` PHP
 class AggregatorControllerImpl extends AggregatorGenericControllerImpl {
