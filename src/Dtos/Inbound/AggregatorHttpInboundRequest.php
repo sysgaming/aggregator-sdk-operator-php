@@ -17,6 +17,18 @@ class AggregatorHttpInboundRequest {
     private $signatureHolder;
 
     /**
+     * AggregatorHttpInboundRequest constructor.
+     * @param string $contents
+     * @param AggregatorSignatureHolder $signatureHolder
+     */
+    public function __construct($contents, AggregatorSignatureHolder $signatureHolder)
+    {
+        $this->contents = $contents;
+        $this->signatureHolder = $signatureHolder;
+    }
+
+
+    /**
      * @return string
      */
     public function getContents()
@@ -25,33 +37,11 @@ class AggregatorHttpInboundRequest {
     }
 
     /**
-     * @param string $contents
-     * @return AggregatorHttpInboundRequest
-     */
-    public function setContents($contents)
-    {
-        $this->contents = $contents;
-        return $this;
-    }
-
-
-
-    /**
      * @return AggregatorSignatureHolder
      */
     public function getSignatureHolder()
     {
         return $this->signatureHolder;
-    }
-
-    /**
-     * @param AggregatorSignatureHolder $signatureHolder
-     * @return AggregatorHttpInboundRequest
-     */
-    public function setSignatureHolder($signatureHolder)
-    {
-        $this->signatureHolder = $signatureHolder;
-        return $this;
     }
 
 }

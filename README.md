@@ -48,27 +48,27 @@ class AggregatorControllerImpl extends AggregatorGenericControllerImpl {
 
 Uma breve explicação sobre o que cada método deve fazer:
 
-- `doHttpPost(...)`: deve implementar uma chamada Http ao Agregador com os dados recebidos em `AggregatorHttpOutboundRequest $request`;
+- `doHttpPost(...)`: deve implementar uma chamada Http ao Agregador. O SDK invoca este método dentro da implementação do `AggregatorController::buildGameUrl()` ;
 
 > TODO exemplo
 
-- `handleBalance(...)`: deve implementar a lógica de busca e retorno do saldo atual do jogador;
+- `handleBalance(...)`: deve implementar a lógica de busca e retorno do saldo atual do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::balanceFromRequest()`;
 
 > TODO exemplo
 
-- `handleBet(...)`: deve implementar a lógica de **débito** de uma aposta do saldo do jogador;
+- `handleBet(...)`: deve implementar a lógica de **débito** de uma aposta do saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::betFromRequest()`;
 
 > TODO exemplo
 
-- `handleWin(...)`: deve implementar a lógica de **crédito** de uma premiação ao saldo do jogador;
+- `handleWin(...)`: deve implementar a lógica de **crédito** de uma premiação ao saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::winFromRequest()`;
 
 > TODO exemplo
 
-- `handleRollback(...)`: deve implementar a lógica de **cancelamento** de uma determinada transação (quando possível), **crédito** ou **débito** do saldo do jogador;
+- `handleRollback(...)`: deve implementar a lógica de **cancelamento** de uma determinada transação (quando possível), **crédito** ou **débito** do saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::rollbackFromRequest()`;
 
 > TODO exemplo
 
-- `getPlayerFromToken(...)`: deve retornar um `AggregatorPlayerWallet` com base no `$token` recebido como parâmetro;
+- `getPlayerFromToken(...)`: deve retornar um `AggregatorPlayerWallet` com base no `$token` recebido como parâmetro. O SDK invoca este método dentro da implementação dos métodos `handleBalance`, `handleBet`, `handleWin` e `handleRollback`;
 
 > TODO exemplo
 
@@ -76,9 +76,112 @@ Uma breve explicação sobre o que cada método deve fazer:
 
 **Atenção**: É nessário que o Operador crie/configure rotas/endpoints em sua aplicação de acordo com a Documentação para Operadores (TODO link da doc). E dentro de cada método que aceita as requisições dessas rotas/endpoints o Operador deve utilizar os métodos implementados da interface `AggregatorController` descritos anteriormente. **Este SDK não cria/configura nenhuma rota/endpoint**.
 
-Exemplo de utilização após criação/configuração de rotas/endpoints:
+Exemplo de rotas/endpoints:
 
-> TODO
+``` PHP
+Route::post('/balance', 'ApplicationSysgamingController@balance');
+Route::post('/win', 'ApplicationSysgamingController@win');
+Route::post('/bet', 'ApplicationSysgamingController@bet');
+Route::post('/rollback', 'ApplicationSysgamingController@rollback');
+```
+
+Exemplo de utilização do SDK:
+
+``` PHP
+class ApplicationSysgamingController extends SomeSuperController {
+
+    /**
+     * @var AggregatorController
+     */
+    private $sdkController;
+
+    function __construct() {
+
+        $sdkController = new SysgamingAggregatorSDK(
+            // algumas implementações necessárias da classe abstrata
+        );
+
+        $this->sdkController = $sdkController;
+
+    }
+
+    public function balance() {
+
+        $payload = $this->extractPayloadFromReques();
+        $signatureHolder = $this->signatureHolderFromRequest();
+
+        $aggRequest = new AggregatorHttpInboundRequest($payload, $signatureHolder);
+
+        $responseDTO = $this->sdkController->balanceFromRequest($aggRequest);
+
+        return $this->sdkController->getJsonHandler()->jsonEncode($responseDTO);
+
+    }
+
+    public function bet() {
+
+        $payload = $this->extractPayloadFromReques();
+        $signatureHolder = $this->signatureHolderFromRequest();
+
+        $aggRequest = new AggregatorHttpInboundRequest($payload, $signatureHolder);
+
+        $responseDTO = $this->sdkController->betFromRequest($aggRequest);
+
+        return $this->sdkController->getJsonHandler()->jsonEncode($responseDTO);
+
+    }
+
+    public function win() {
+
+        $payload = $this->extractPayloadFromReques();
+        $signatureHolder = $this->signatureHolderFromRequest();
+
+        $aggRequest = new AggregatorHttpInboundRequest($payload, $signatureHolder);
+
+        $responseDTO = $this->sdkController->winFromRequest($aggRequest);
+
+        return $this->sdkController->getJsonHandler()->jsonEncode($responseDTO);
+
+    }
+
+    public function rollback() {
+
+        $payload = $this->extractPayloadFromReques();
+        $signatureHolder = $this->signatureHolderFromRequest();
+
+        $aggRequest = new AggregatorHttpInboundRequest($payload, $signatureHolder);
+
+        $responseDTO = $this->sdkController->rollbackFromRequest($aggRequest);
+
+        return $this->sdkController->getJsonHandler()->jsonEncode($responseDTO);
+
+    }
+
+    private function extractPayloadFromReques() {
+
+        return Request::inputs();
+
+    }
+
+    private function signatureHolderFromRequest() {
+
+        // no caso de Http Basic Auth
+        $user = Request::getUser();
+        $password = Request::getPassword();
+
+        // no caso de outros formas de autenticação
+        $signature = Request::header(AggregatorController::SIGNATURE_INBOUND_HEADER_NAME);
+
+        return (new AggregatorSignatureHolder())
+            ->setUser($user)
+            ->setPassword($password)
+            ->setSignature($signature);
+
+    }
+
+}
+```
+
 
 # Tratamento de erros/exceptions
 
