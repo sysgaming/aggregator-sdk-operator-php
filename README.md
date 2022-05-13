@@ -105,6 +105,33 @@ class ApplicationSysgamingController extends SomeSuperController {
 
     }
 
+    public function buildGameUrl($user, $token, $wallet, $gameCode) {
+
+        $startPlaying = new AggregatorStartPlaying();
+
+        $redirectUrls = (new AggregatorRedirectUrls())
+            ->setHomeURL("https://www.best-operator.com") // required
+            ->setLobbyURL("https://www.best-operator.com/casino")
+            ->setCashierURL("https://www.best-operator.com/deposit")
+            ->setGameURL("https://www.best-operator.com/casino/game/$gameCode")
+        ;
+
+        $startPlaying
+            ->setPlayerId($user->id)
+            ->setPlayerName($user->name)
+            ->setToken($token)
+            ->setCurrency($wallet->currency)
+            ->setInitialBalance($wallet->balance)
+            ->setProductCode($gameCode)
+            ->setLanguage("en")
+            ->setCountry("US")
+            ->setRedirectURLs($redirectUrls)
+        ;
+
+        return $this->sdkController->buildGameUrl($startPlaying);
+
+    }
+
     public function balance() {
 
         $payload = $this->extractPayloadFromReques();
