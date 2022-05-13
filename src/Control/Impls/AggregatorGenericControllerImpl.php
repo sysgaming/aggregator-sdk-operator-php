@@ -16,6 +16,7 @@ use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\ExceptionDTO;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\CurrencyNotSupportedException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidTokenException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\NotEnoughMoneyException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\UserCantPlayException;
 use Sysgaming\AggregatorSdkPhp\Helpers\ArrayUtils;
 use Sysgaming\AggregatorSdkPhp\Helpers\Base64Handler;
@@ -175,6 +176,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $dto = $this->getGamingMapper()->betFromRequest($jsonContents);
 
+            if( $player->getBalance() < $dto->getAmount() )
+                throw new NotEnoughMoneyException($player);
+
             return $this->handleBet($dto, $player);
 
         });
@@ -235,13 +239,13 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         return $this->jsonHandler;
     }
 
-    function getBase64Handler()
-    {
+    function getBase64Handler() {
+
         return $this->base64Handler;
+
     }
 
-    private function extractRequestUUID(array $jsonContents)
-    {
+    private function extractRequestUUID(array $jsonContents) {
 
         return array_key_exists('requestUUID', $jsonContents) ? $jsonContents['requestUUID'] : null;
 
