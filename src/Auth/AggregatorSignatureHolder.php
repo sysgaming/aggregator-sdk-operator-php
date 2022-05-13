@@ -8,7 +8,6 @@ class AggregatorSignatureHolder
     private $signature;
     private $user;
     private $password;
-    private $test;
 
     /**
      * @return mixed
