@@ -98,7 +98,7 @@ class ApplicationSysgamingController extends SomeSuperController {
     function __construct() {
 
         $sdkController = new SysgamingAggregatorSDK(
-            // algumas implementações necessárias da classe abstrata
+            // algumas implementações/configurações necessárias da classe abstrata
         );
 
         $this->sdkController = $sdkController;
