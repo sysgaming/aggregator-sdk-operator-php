@@ -22,8 +22,6 @@ Apesar de este SDK ter sido implementado de forma mais "standard" possível, ou 
 
 Basicamente a utilização deste SDK se dá pela implementação da interface `AggregatorController`. Ela é responsável por definir como a comunicação com o Agregador deve ser feita e com quais dados. 
 
-**Atenção**: é nessário que o Operador crie/configure rotas/endpoints em sua aplicação de acordo com a Documentação para Operadores (TODO link da doc). E dentro de cada método que aceita as requisições dessas rotas/endpoints o Operador deve utilizar a implementação do `AggregatorController` descrita anteriormente. Este SDK não cria/configura nenhuma rota/endpoint.
-
 A implementação deve suprir todos os métodos descritos na interface, porém existe uma implementação base que abstrai alguns métodos desta interface `AggregatorGenericControllerImpl` o que torna necessário a implementação de ao menos 6 métodos obrigatórios, segue um exemplo:
 
 ``` PHP
@@ -31,35 +29,17 @@ class AggregatorControllerImpl extends AggregatorGenericControllerImpl {
 
 	//... outros métodos estão implementados na classe pai
 
-    function doHttpPost(AggregatorHttpOutboundRequest $request)
-    {
-        // TODO: Implement doHttpPost() method.
-    }
+    function doHttpPost(AggregatorHttpOutboundRequest $request) { /* ... */ }
 
-    function handleBalance(AggregatorBalance $balance, AggregatorPlayerWallet $player)
-    {
-        // TODO: Implement handleBalance() method.
-    }
+    function handleBalance(AggregatorBalance $balance, AggregatorPlayerWallet $player) { /* ... */ }
 
-    function handleBet(AggregatorBet $bet, AggregatorPlayerWallet $player)
-    {
-        // TODO: Implement handleBet() method.
-    }
+    function handleBet(AggregatorBet $bet, AggregatorPlayerWallet $player) { /* ... */ }
 
-    function handleWin(AggregatorWin $win, AggregatorPlayerWallet $player)
-    {
-        // TODO: Implement handleWin() method.
-    }
+    function handleWin(AggregatorWin $win, AggregatorPlayerWallet $player) { /* ... */ }
 
-    function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player)
-    {
-        // TODO: Implement handleRollback() method.
-    }
+    function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player) { /* ... */ }
 
-    function getPlayerFromToken($token)
-    {
-        // TODO: Implement getPlayerFromToken() method.
-    }
+    function getPlayerFromToken($token) { /* ... */ }
 
 	//... outros métodos estão implementados na classe pai
 
@@ -92,6 +72,13 @@ Uma breve explicação sobre o que cada método deve fazer:
 
 > TODO exemplo
 
+## Roteamento/Endpoints
+
+**Atenção**: É nessário que o Operador crie/configure rotas/endpoints em sua aplicação de acordo com a Documentação para Operadores (TODO link da doc). E dentro de cada método que aceita as requisições dessas rotas/endpoints o Operador deve utilizar os métodos implementados da interface `AggregatorController` descritos anteriormente. **Este SDK não cria/configura nenhuma rota/endpoint**.
+
+Exemplo de utilização após criação/configuração de rotas/endpoints:
+
+> TODO
 
 # Tratamento de erros/exceptions
 
