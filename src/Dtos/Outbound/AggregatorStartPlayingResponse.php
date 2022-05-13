@@ -11,9 +11,10 @@ class AggregatorStartPlayingResponse
      * AggregatorStartPlaying constructor.
      * @param $requestUUID
      */
-    public function __construct($requestUUID)
+    public function __construct($requestUUID, $url)
     {
         $this->requestUUID = $requestUUID;
+        $this->url = $url;
     }
 
     /**

@@ -145,6 +145,8 @@ class AggregatorGamingMapperImpl implements AggregatorGamingMapper
      */
     function startPlayingResponse(AggregatorHttpOutboundResponse $response)
     {
-        // TODO: Implement startPlayingResponse() method.
+
+
+
     }
 }
