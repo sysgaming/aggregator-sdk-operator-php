@@ -2,7 +2,9 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Dtos\Outbound;
 
-class ExceptionDTO {
+use Sysgaming\AggregatorSdkPhp\Dtos\AggregatorJsonObject;
+
+class ExceptionDTO implements AggregatorJsonObject {
 
     private $requestUUID;
     private $type;
@@ -81,6 +83,21 @@ class ExceptionDTO {
         return $this;
     }
 
+    function toArray() {
 
+        $acc = [
+            'requestUUID' => $this->getRequestUUID(),
+            'type' => $this->getType(),
+        ];
+
+        if( !is_null($this->getMessage()))
+            $acc['message'] = $this->getMessage();
+
+        if( !is_null($this->getRelated()))
+            $acc['related'] = $this->getRelated();
+
+        return $acc;
+
+    }
 
 }

@@ -10,7 +10,7 @@ class AggregatorHttpOutboundResponse {
     private $statusCode;
 
     /**
-     * @var string|array
+     * @var string
      */
     private $contents;
 
@@ -33,7 +33,7 @@ class AggregatorHttpOutboundResponse {
     }
 
     /**
-     * @return array|string
+     * @return string
      */
     public function getContents()
     {
@@ -41,7 +41,7 @@ class AggregatorHttpOutboundResponse {
     }
 
     /**
-     * @param array|string $contents
+     * @param string $contents
      * @return AggregatorHttpOutboundResponse
      */
     public function setContents($contents)

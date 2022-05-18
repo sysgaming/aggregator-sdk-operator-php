@@ -2,11 +2,23 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Dtos\Outbound;
 
-class AggregatorStartPlaying
-{
+use Sysgaming\AggregatorSdkPhp\Dtos\AggregatorJsonObject;
+
+class AggregatorStartPlaying implements AggregatorJsonObject {
 
     const GAME_MODE_FOR_FUN = "FOR_FUN";
     const GAME_MODE_FOR_REAL = "FOR_REAL";
+
+    /**
+     * @var string
+     */
+    private $requestUUID;
+
+    /**
+     * @var string ISO Timestamp
+     * @example 2022-01-01T00:00:00Z
+     */
+    private $timestamp;
 
     /**
      * @var string
@@ -57,6 +69,42 @@ class AggregatorStartPlaying
      * @var AggregatorRedirectUrls
      */
     private $redirectURLs;
+
+    /**
+     * @return string
+     */
+    public function getRequestUUID()
+    {
+        return $this->requestUUID;
+    }
+
+    /**
+     * @param string $requestUUID
+     * @return AggregatorStartPlaying
+     */
+    public function setRequestUUID($requestUUID)
+    {
+        $this->requestUUID = $requestUUID;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * @param string $timestamp
+     * @return AggregatorStartPlaying
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+        return $this;
+    }
 
     /**
      * @return string
@@ -237,5 +285,50 @@ class AggregatorStartPlaying
         $this->redirectURLs = $redirectURLs;
         return $this;
     }
+
+    function toArray() {
+
+        $acc = [];
+
+        if( !is_null($this->getRequestUUID()) )
+            $acc['requestUUID'] = $this->getRequestUUID();
+
+        if( !is_null($this->getTimestamp()) )
+            $acc['timestamp'] = $this->getTimestamp();
+
+        if( !is_null($this->getPlayerId()) )
+            $acc['playerId'] = $this->getPlayerId();
+
+        if( !is_null($this->getPlayerName()) )
+            $acc['playerName'] = $this->getPlayerName();
+
+        if( !is_null($this->getToken()) )
+            $acc['token'] = $this->getToken();
+
+        if( !is_null($this->getCurrency()) )
+            $acc['currency'] = $this->getCurrency();
+
+        if( !is_null($this->getInitialBalance()) )
+            $acc['initialBalance'] = $this->getInitialBalance();
+
+        if( !is_null($this->getProductCode()) )
+            $acc['productCode'] = $this->getProductCode();
+
+        if( !is_null($this->getGameMode()) )
+            $acc['gameMode'] = $this->getGameMode();
+
+        if( !is_null($this->getLanguage()) )
+            $acc['language'] = $this->getLanguage();
+
+        if( !is_null($this->getCountry()) )
+            $acc['country'] = $this->getCountry();
+
+        if( !is_null($this->getRedirectURLs()) )
+            $acc['redirectURLs'] = $this->getRedirectURLs()->toArray();
+
+        return $acc;
+
+    }
+
 
 }

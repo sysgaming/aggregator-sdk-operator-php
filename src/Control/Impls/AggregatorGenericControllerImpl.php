@@ -7,8 +7,9 @@ use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayerWallet;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Control\AggregatorController;
+use Sysgaming\AggregatorSdkPhp\Control\PlayerFromTokenGetter;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
-use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
@@ -63,6 +64,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
     private $gamingMapper;
 
     /**
+     * @var PlayerFromTokenGetter
+     */
+    private $playerFromTokenGetter;
+
+    /**
      * AggregatorGenericControllerImpl constructor.
      * @param $aggregatorEndpoint string url
      * @param JsonHandler $jsonHandler
@@ -71,6 +77,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
      * @param AggregatorSignatureMaker $signatureMaker
      * @param AggregatorExceptionMapper $exceptionMapper
      * @param AggregatorGamingMapper $gamingMapper
+     * @param PlayerFromTokenGetter $playerFromTokenGetter
      */
     public function __construct(
         $aggregatorEndpoint,
@@ -79,7 +86,8 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         AggregatorSignatureChecker $signatureChecker,
         AggregatorSignatureMaker $signatureMaker,
         AggregatorExceptionMapper $exceptionMapper,
-        AggregatorGamingMapper $gamingMapper
+        AggregatorGamingMapper $gamingMapper,
+        PlayerFromTokenGetter $playerFromTokenGetter
     ) {
 
         $this->aggregatorEndpoint = $aggregatorEndpoint;
@@ -89,6 +97,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         $this->signatureMaker = $signatureMaker;
         $this->exceptionMapper = $exceptionMapper;
         $this->gamingMapper = $gamingMapper;
+        $this->playerFromTokenGetter = $playerFromTokenGetter;
     }
 
     /**
@@ -98,13 +107,18 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
      */
     function buildGameUrl(AggregatorStartPlaying $startPlaying) {
 
+        if( !$startPlaying->getRequestUUID() )
+            $startPlaying->setRequestUUID($this->makeRequestUUID());
+
         $payload = $this->getJsonHandler()->jsonEncode($startPlaying);
 
         $signature = $this->getSignatureMaker()->sign($payload);
 
         $encodedSignature = $this->getBase64Handler()->base64Encode($signature);
 
-        $aggRequest = $this->makeAggregatorRequest($this->aggregatorEndpoint, $payload, $encodedSignature);
+        $pathRequest = '/build-game-url';
+
+        $aggRequest = $this->makeAggregatorRequest($this->aggregatorEndpoint . $pathRequest, $payload, $encodedSignature);
 
         $aggResponse = $this->doHttpPost($aggRequest);
 
@@ -135,7 +149,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $this->getSignatureChecker()->validate($request);
 
-            $player = $this->getPlayerFromToken(ArrayUtils::get('token', $jsonContents));
+            $player = $this->getPlayerFromTokenGetter()->findPlayerByToken(ArrayUtils::get('token', $jsonContents));
 
             if( !$player )
                 throw new InvalidTokenException();
@@ -209,6 +223,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
+    function getPlayerFromTokenGetter() {
+
+        return $this->playerFromTokenGetter;
+
+    }
 
     function getExceptionMapper() {
 

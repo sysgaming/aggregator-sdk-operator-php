@@ -4,12 +4,15 @@ namespace Sysgaming\AggregatorSdkPhp\Mappers\Impls;
 
 use Exception;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorRollback;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorWin;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundResponse;
+use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\UnknownGamingException;
 use Sysgaming\AggregatorSdkPhp\Helpers\ArrayUtils;
 use Sysgaming\AggregatorSdkPhp\Helpers\JsonHandler;
 use Sysgaming\AggregatorSdkPhp\Mappers\AggregatorGamingMapper;
@@ -146,7 +149,18 @@ class AggregatorGamingMapperImpl implements AggregatorGamingMapper
     function startPlayingResponse(AggregatorHttpOutboundResponse $response)
     {
 
+        $statusCode = $response->getStatusCode();
 
+        if( $statusCode < 200 || $statusCode >= 300 )
+            throw new UnknownGamingException("Invalid StartPlaying Response");
+
+        $payloadArray = $this->jsonHandler->jsonDecode($response->getContents());
+
+        return new AggregatorStartPlayingResponse(
+            ArrayUtils::get('requestUUID', $payloadArray),
+            ArrayUtils::get('url', $payloadArray)
+        );
 
     }
+
 }

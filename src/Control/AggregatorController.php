@@ -11,7 +11,7 @@ use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorRollback;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorWin;
-use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
@@ -35,6 +35,11 @@ interface AggregatorController {
      * @return AggregatorHttpOutboundResponse
      */
     function doHttpPost(AggregatorHttpOutboundRequest $request);
+
+    /**
+     * @return string
+     */
+    function makeRequestUUID();
 
     /**
      * @param $aggregatorEndpoint string
@@ -107,12 +112,6 @@ interface AggregatorController {
     function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player);
 
     /**
-     * @param $token
-     * @return AggregatorPlayerWallet
-     */
-    function getPlayerFromToken($token);
-
-    /**
      * @return JsonHandler
      */
     function getJsonHandler();
@@ -141,5 +140,10 @@ interface AggregatorController {
      * @return AggregatorSignatureMaker
      */
     function getSignatureMaker();
+
+    /**
+     * @return PlayerFromTokenGetter
+     */
+    function getPlayerFromTokenGetter();
 
 }

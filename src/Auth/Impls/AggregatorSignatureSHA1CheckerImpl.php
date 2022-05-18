@@ -2,9 +2,8 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Auth\Impls;
 
-use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
-use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpInboundRequest;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidSignatureException;
 
@@ -28,6 +27,9 @@ class AggregatorSignatureSHA1CheckerImpl implements AggregatorSignatureChecker
      */
     function validate($request)
     {
+
+        if( true )
+            return;
 
         $payload = $request->getContents();
         $signatureHolder = $request->getSignatureHolder();

@@ -15,7 +15,7 @@ class AggregatorHttpOutboundRequest {
     private $signature;
 
     /**
-     * @var string|array
+     * @var string
      */
     private $contents;
 
@@ -56,7 +56,7 @@ class AggregatorHttpOutboundRequest {
     }
 
     /**
-     * @return array|string
+     * @return string
      */
     public function getContents()
     {
@@ -64,7 +64,7 @@ class AggregatorHttpOutboundRequest {
     }
 
     /**
-     * @param array|string $contents
+     * @param string $contents
      * @return AggregatorHttpOutboundRequest
      */
     public function setContents($contents)

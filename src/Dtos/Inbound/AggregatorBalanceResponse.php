@@ -2,7 +2,9 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Dtos\Inbound;
 
-class AggregatorBalanceResponse {
+use Sysgaming\AggregatorSdkPhp\Dtos\AggregatorJsonObject;
+
+class AggregatorBalanceResponse implements AggregatorJsonObject {
 
     private $requestUUID;
     private $currency;
@@ -44,5 +46,16 @@ class AggregatorBalanceResponse {
     {
         return $this->balance;
     }
+
+    function toArray() {
+
+        return [
+            'requestUUID' => $this->getRequestUUID(),
+            'currency' => $this->getCurrency(),
+            'balance' => $this->getBalance(),
+        ];
+
+    }
+
 
 }

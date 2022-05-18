@@ -25,21 +25,27 @@ abstract class AggregatorPlayerWalletImpl implements AggregatorPlayerWallet
     private $token;
 
     /**
+     * AggregatorPlayerWalletImpl constructor.
+     * @param $id
+     * @param int $balance
+     * @param string $currency
+     * @param string $token
+     */
+    public function __construct($id, $balance, $currency, $token)
+    {
+        $this->id = $id;
+        $this->balance = $balance;
+        $this->currency = $currency;
+        $this->token = $token;
+    }
+
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     * @return AggregatorPlayerWallet
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**
@@ -51,16 +57,6 @@ abstract class AggregatorPlayerWalletImpl implements AggregatorPlayerWallet
     }
 
     /**
-     * @param int $balance
-     * @return AggregatorPlayerWallet
-     */
-    public function setBalance($balance)
-    {
-        $this->balance = $balance;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getCurrency()
@@ -69,31 +65,11 @@ abstract class AggregatorPlayerWalletImpl implements AggregatorPlayerWallet
     }
 
     /**
-     * @param string $currency
-     * @return AggregatorPlayerWallet
-     */
-    public function setCurrency($currency)
-    {
-        $this->currency = $currency;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getToken()
     {
         return $this->token;
-    }
-
-    /**
-     * @param string $token
-     * @return AggregatorPlayerWallet
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-        return $this;
     }
 
 }

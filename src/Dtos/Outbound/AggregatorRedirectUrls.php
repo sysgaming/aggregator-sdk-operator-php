@@ -2,8 +2,9 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Dtos\Outbound;
 
-class AggregatorRedirectUrls
-{
+use Sysgaming\AggregatorSdkPhp\Dtos\AggregatorJsonObject;
+
+class AggregatorRedirectUrls implements AggregatorJsonObject {
 
     /**
      * @var string
@@ -96,5 +97,26 @@ class AggregatorRedirectUrls
         $this->gameURL = $gameURL;
         return $this;
     }
+
+    function toArray() {
+
+        $acc = [];
+
+        if( !is_null($this->getHomeURL()) )
+            $acc['homeURL'] = $this->getHomeURL();
+
+        if( !is_null($this->getLobbyURL()) )
+            $acc['lobbyURL'] = $this->getLobbyURL();
+
+        if( !is_null($this->getCashierURL()) )
+            $acc['cashierURL'] = $this->getCashierURL();
+
+        if( !is_null($this->getGameURL()) )
+            $acc['gameURL'] = $this->getGameURL();
+
+        return $acc;
+
+    }
+
 
 }

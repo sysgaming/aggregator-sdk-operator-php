@@ -1,6 +1,6 @@
 <?php
 
-namespace Sysgaming\AggregatorSdkPhp\Dtos\Outbound;
+namespace Sysgaming\AggregatorSdkPhp\Dtos\Inbound;
 
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureHolder;
 
