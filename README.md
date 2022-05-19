@@ -245,7 +245,7 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
-- `findExistedAggregatorTransaction(...)`: ;
+- `findExistedAggregatorTransaction(...)`: TODO ;
 
 > TODO exemplo
 
