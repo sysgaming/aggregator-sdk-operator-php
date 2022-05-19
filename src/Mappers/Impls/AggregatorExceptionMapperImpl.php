@@ -2,6 +2,7 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Mappers\Impls;
 
+use ReflectionClass;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\ExceptionDTO;
 use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Helpers\StringUtils;
@@ -23,12 +24,14 @@ class AggregatorExceptionMapperImpl implements AggregatorExceptionMapper
 
         if( $exception instanceof AggregatorGamingException) {
 
+            $reflect = new ReflectionClass($exception);
+
             $dto
                 ->setRequestUUID($requestUUID)
-                ->setMessage($exception->getMessage())
-                ->setType(StringUtils::camelToSnake(get_class($exception)));
+                ->setType(StringUtils::camelToUnderScore($reflect->getShortName()));
 
-            //TODO add related field
+            if( $exception->getMessage() )
+                $dto->setMessage($exception->getMessage());
 
         } else {
 
@@ -36,7 +39,6 @@ class AggregatorExceptionMapperImpl implements AggregatorExceptionMapper
                 ->setRequestUUID($requestUUID)
                 ->setMessage($exception->getMessage())
                 ->setType("unknown_gaming_exception");
-
 
         }
 
