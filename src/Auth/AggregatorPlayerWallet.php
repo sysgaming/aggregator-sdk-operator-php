@@ -17,12 +17,6 @@ interface AggregatorPlayerWallet
     function getBalance();
 
     /**
-     * @return int A really fresh balance after some credits/debits have processed
-     * @see AggregatorPlayerWallet::getBalance()
-     */
-    function freshBalance();
-
-    /**
      * @return string
      */
     function getCurrency();

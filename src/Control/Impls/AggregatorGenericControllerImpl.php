@@ -7,7 +7,7 @@ use Sysgaming\AggregatorSdkPhp\Auth\AggregatorPlayerWallet;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Control\AggregatorController;
-use Sysgaming\AggregatorSdkPhp\Control\PlayerFromTokenGetter;
+use Sysgaming\AggregatorSdkPhp\Control\PlayerWalletManager;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
@@ -71,9 +71,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
     private $gamingMapper;
 
     /**
-     * @var PlayerFromTokenGetter
+     * @var PlayerWalletManager
      */
-    private $playerFromTokenGetter;
+    private $playerWalletManager;
 
     /**
      * AggregatorGenericControllerImpl constructor.
@@ -84,7 +84,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
      * @param AggregatorSignatureMaker $signatureMaker
      * @param AggregatorExceptionMapper $exceptionMapper
      * @param AggregatorGamingMapper $gamingMapper
-     * @param PlayerFromTokenGetter $playerFromTokenGetter
+     * @param PlayerWalletManager $playerWalletManager
      */
     public function __construct(
         $aggregatorEndpoint,
@@ -94,7 +94,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         AggregatorSignatureMaker $signatureMaker,
         AggregatorExceptionMapper $exceptionMapper,
         AggregatorGamingMapper $gamingMapper,
-        PlayerFromTokenGetter $playerFromTokenGetter
+        PlayerWalletManager $playerWalletManager
     ) {
 
         $this->aggregatorEndpoint = $aggregatorEndpoint;
@@ -104,7 +104,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         $this->signatureMaker = $signatureMaker;
         $this->exceptionMapper = $exceptionMapper;
         $this->gamingMapper = $gamingMapper;
-        $this->playerFromTokenGetter = $playerFromTokenGetter;
+        $this->playerWalletManager = $playerWalletManager;
     }
 
     /**
@@ -156,7 +156,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $this->getSignatureChecker()->validate($request);
 
-            $player = $this->getPlayerFromTokenGetter()->findPlayerByToken(ArrayUtils::get('token', $jsonContents));
+            $player = $this->getPlayerWalletManager()->findPlayerByToken(ArrayUtils::get('token', $jsonContents));
 
             if( !$player )
                 throw new InvalidTokenException();
@@ -314,15 +314,42 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         return new AggregatorBalanceResponse(
             $tr->getRequestUUID(),
             $player->getCurrency(),
-            $player->freshBalance()
+            $this->getFreshBalance($player)
         );
 
     }
 
+    protected function getFreshBalance($player) {
 
-    function getPlayerFromTokenGetter() {
+        return $this->getPlayerWalletManager()
+            ->getFreshBalanceForPlayer($player);
 
-        return $this->playerFromTokenGetter;
+    }
+
+    function makeRequestUUID() {
+
+        // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+        $data = openssl_random_pseudo_bytes(16);
+
+        // Set version to 0100
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        // Set bits 6-7 to 10
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        // Output the 36 character UUID.
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+
+    }
+
+    private function extractRequestUUID(array $jsonContents) {
+
+        return ArrayUtils::get('requestUUID', $jsonContents);
+
+    }
+
+    function getPlayerWalletManager() {
+
+        return $this->playerWalletManager;
 
     }
 
@@ -358,27 +385,6 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
     function getBase64Handler() {
 
         return $this->base64Handler;
-
-    }
-
-    function makeRequestUUID() {
-
-        // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
-        $data = openssl_random_pseudo_bytes(16);
-
-        // Set version to 0100
-        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
-        // Set bits 6-7 to 10
-        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
-
-        // Output the 36 character UUID.
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
-
-    }
-
-    private function extractRequestUUID(array $jsonContents) {
-
-        return ArrayUtils::get('requestUUID', $jsonContents);
 
     }
 

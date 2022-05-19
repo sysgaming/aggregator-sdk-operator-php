@@ -134,6 +134,11 @@ interface AggregatorController {
     function makeAggregatorFreshBalanceResponse($tr, AggregatorPlayerWallet $player);
 
     /**
+     * @return PlayerWalletManager
+     */
+    function getPlayerWalletManager();
+
+    /**
      * @return JsonHandler
      */
     function getJsonHandler();
@@ -162,10 +167,5 @@ interface AggregatorController {
      * @return AggregatorSignatureMaker
      */
     function getSignatureMaker();
-
-    /**
-     * @return PlayerFromTokenGetter
-     */
-    function getPlayerFromTokenGetter();
 
 }
