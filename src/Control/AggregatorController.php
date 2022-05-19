@@ -8,6 +8,7 @@ use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorOperatorTransaction;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorRollback;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorWin;
@@ -90,26 +91,40 @@ interface AggregatorController {
     /**
      * @param AggregatorBet $bet
      * @param AggregatorPlayerWallet $player
+     * @param AggregatorOperatorTransaction|null $existedTr
      * @return AggregatorBalanceResponse
-     * @throws AggregatorGamingException|Exception
      */
-    function handleBet(AggregatorBet $bet, AggregatorPlayerWallet $player);
+    function handleBet(AggregatorBet $bet, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
 
     /**
      * @param AggregatorWin $win
      * @param AggregatorPlayerWallet $player
+     * @param AggregatorOperatorTransaction|null $existedTr
      * @return AggregatorBalanceResponse
-     * @throws AggregatorGamingException|Exception
      */
-    function handleWin(AggregatorWin $win, AggregatorPlayerWallet $player);
+    function handleWin(AggregatorWin $win, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
 
     /**
      * @param AggregatorRollback $rollback
      * @param AggregatorPlayerWallet $player
+     * @param AggregatorOperatorTransaction|null $existedTr
      * @return AggregatorBalanceResponse
-     * @throws AggregatorGamingException|Exception
      */
-    function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player);
+    function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
+
+    /**
+     * @param $transactionId string
+     * @return AggregatorOperatorTransaction
+     */
+    function findExistedAggregatorTransaction($transactionId);
+
+    /**
+     * @param $tr AggregatorBet|AggregatorWin|AggregatorRollback
+     * @param AggregatorPlayerWallet $player
+     * @param AggregatorOperatorTransaction|null $existedTr
+     * @return AggregatorBalanceResponse
+     */
+    function handleTransaction($tr, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
 
     /**
      * @param $tr AggregatorBet|AggregatorWin|AggregatorRollback

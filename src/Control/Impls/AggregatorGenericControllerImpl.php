@@ -10,7 +10,11 @@ use Sysgaming\AggregatorSdkPhp\Control\AggregatorController;
 use Sysgaming\AggregatorSdkPhp\Control\PlayerFromTokenGetter;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBet;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorHttpInboundRequest;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorOperatorTransaction;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorRollback;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorWin;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlaying;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorStartPlayingResponse;
@@ -19,6 +23,8 @@ use Sysgaming\AggregatorSdkPhp\Exceptions\AggregatorGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\CurrencyNotSupportedException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidTokenException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\NotEnoughMoneyException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\TransactionConflictException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\UnknownGamingException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\UserCantPlayException;
 use Sysgaming\AggregatorSdkPhp\Helpers\ArrayUtils;
 use Sysgaming\AggregatorSdkPhp\Helpers\Base64Handler;
@@ -204,7 +210,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
             if( $player->getBalance() < $dto->getAmount() )
                 throw new NotEnoughMoneyException($player);
 
-            return $this->handleBet($dto, $player);
+            return $this->handleBetOrWin($dto, $player);
 
         });
 
@@ -216,7 +222,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $dto = $this->getGamingMapper()->winFromRequest($jsonContents);
 
-            return $this->handleWin($dto, $player);
+            return $this->handleBetOrWin($dto, $player);
 
         });
 
@@ -228,11 +234,80 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $dto = $this->getGamingMapper()->rollbackFromRequest($jsonContents);
 
-            return $this->handleRollback($dto, $player);
+            $existedTr = $this->findExistedAggregatorTransaction($dto->getTransactionId());
+
+            if( $existedTr ) {
+
+                if(
+                    $existedTr->getPlayerId() != $player->getId()
+                    || $existedTr->getRoundId() != $dto->getRoundId()
+                    || $existedTr->getProductCode() != $dto->getProductCode()
+                )
+                    throw new TransactionConflictException();
+
+                if(
+                    $existedTr->getType() == AggregatorOperatorTransaction::TR_TYPE_WIN
+                    && $existedTr->getAmount() > $player->getBalance()
+                )
+                    throw new NotEnoughMoneyException($player);
+
+            }
+
+            return $this->handleTransaction($dto, $player, $existedTr);
 
         });
 
     }
+
+    /**
+     * @param AggregatorBet|AggregatorWin $tr
+     * @param AggregatorPlayerWallet $player
+     * @return AggregatorBalanceResponse
+     * @throws AggregatorGamingException
+     */
+    protected function handleBetOrWin($tr, $player) {
+
+        $existedTr = $this->findExistedAggregatorTransaction($tr->getTransactionId());
+
+        if( !is_null($existedTr) ) {
+
+            // if already canceled before, then do nothing and return idempotent way
+            if( $existedTr->getType() == AggregatorOperatorTransaction::TR_TYPE_ROLLBACK )
+                return $this->makeAggregatorFreshBalanceResponse($tr, $player);
+
+            else if(
+                $existedTr->getType() == ($tr instanceof AggregatorBet ? AggregatorOperatorTransaction::TR_TYPE_WIN : AggregatorOperatorTransaction::TR_TYPE_BET)
+                || $existedTr->getAmount() != $tr->getAmount()
+                || $existedTr->getRoundId() != $tr->getRoundId()
+                || $existedTr->getProductCode() != $tr->getProductCode()
+                || $existedTr->getPlayerId() != $player->getId()
+            )
+                throw new TransactionConflictException();
+
+            // idempotent way (already resolved/processed)
+            return $this->makeAggregatorFreshBalanceResponse($tr, $player);
+
+        }
+
+        return $this->handleTransaction($tr, $player, $existedTr);
+
+    }
+
+    function handleTransaction($tr, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null) {
+
+        if( $tr instanceof AggregatorBet )
+            return $this->handleBet($tr, $player, $existedTr);
+
+        if( $tr instanceof AggregatorWin )
+            return $this->handleWin($tr, $player, $existedTr);
+
+        if( $tr instanceof AggregatorRollback )
+            return $this->handleRollback($tr, $player, $existedTr);
+
+        throw new UnknownGamingException("Invalid transaction instance to handle");
+
+    }
+
 
     function makeAggregatorFreshBalanceResponse($tr, AggregatorPlayerWallet $player) {
 

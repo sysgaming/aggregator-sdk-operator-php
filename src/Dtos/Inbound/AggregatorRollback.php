@@ -13,7 +13,7 @@ class AggregatorRollback
     protected $payload;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRequestUUID()
     {
@@ -21,7 +21,7 @@ class AggregatorRollback
     }
 
     /**
-     * @param mixed $requestUUID
+     * @param string $requestUUID
      * @return AggregatorRollback
      */
     public function setRequestUUID($requestUUID)
@@ -31,7 +31,7 @@ class AggregatorRollback
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTransactionId()
     {
@@ -39,7 +39,7 @@ class AggregatorRollback
     }
 
     /**
-     * @param mixed $transactionId
+     * @param string $transactionId
      * @return AggregatorRollback
      */
     public function setTransactionId($transactionId)
@@ -49,7 +49,7 @@ class AggregatorRollback
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getToken()
     {
@@ -57,7 +57,7 @@ class AggregatorRollback
     }
 
     /**
-     * @param mixed $token
+     * @param string $token
      * @return AggregatorRollback
      */
     public function setToken($token)
@@ -67,7 +67,7 @@ class AggregatorRollback
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRoundId()
     {
@@ -75,7 +75,7 @@ class AggregatorRollback
     }
 
     /**
-     * @param mixed $roundId
+     * @param string $roundId
      * @return AggregatorRollback
      */
     public function setRoundId($roundId)
@@ -85,7 +85,7 @@ class AggregatorRollback
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getProductCode()
     {
@@ -93,7 +93,7 @@ class AggregatorRollback
     }
 
     /**
-     * @param mixed $productCode
+     * @param string $productCode
      * @return AggregatorRollback
      */
     public function setProductCode($productCode)

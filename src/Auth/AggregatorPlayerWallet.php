@@ -4,6 +4,10 @@ namespace Sysgaming\AggregatorSdkPhp\Auth;
 
 interface AggregatorPlayerWallet
 {
+
+    /**
+     * @return mixed The id on the Operator Side
+     */
     function getId();
 
     /**
