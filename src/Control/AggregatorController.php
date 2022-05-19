@@ -112,6 +112,13 @@ interface AggregatorController {
     function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player);
 
     /**
+     * @param $tr AggregatorBet|AggregatorWin|AggregatorRollback
+     * @param AggregatorPlayerWallet $player
+     * @return AggregatorBalanceResponse
+     */
+    function makeAggregatorFreshBalanceResponse($tr, AggregatorPlayerWallet $player);
+
+    /**
      * @return JsonHandler
      */
     function getJsonHandler();

@@ -8,6 +8,7 @@ use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureChecker;
 use Sysgaming\AggregatorSdkPhp\Auth\AggregatorSignatureMaker;
 use Sysgaming\AggregatorSdkPhp\Control\AggregatorController;
 use Sysgaming\AggregatorSdkPhp\Control\PlayerFromTokenGetter;
+use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalance;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorBalanceResponse;
 use Sysgaming\AggregatorSdkPhp\Dtos\Inbound\AggregatorHttpInboundRequest;
 use Sysgaming\AggregatorSdkPhp\Dtos\Outbound\AggregatorHttpOutboundRequest;
@@ -184,6 +185,16 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
+    function handleBalance(AggregatorBalance $balance, AggregatorPlayerWallet $player) {
+
+        return new AggregatorBalanceResponse(
+            $balance->getRequestUUID(),
+            $player->getCurrency(),
+            $player->getBalance()
+        );
+
+    }
+
     function betFromRequest($request) {
 
         return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
@@ -222,6 +233,17 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         });
 
     }
+
+    function makeAggregatorFreshBalanceResponse($tr, AggregatorPlayerWallet $player) {
+
+        return new AggregatorBalanceResponse(
+            $tr->getRequestUUID(),
+            $player->getCurrency(),
+            $player->freshBalance()
+        );
+
+    }
+
 
     function getPlayerFromTokenGetter() {
 
@@ -264,9 +286,24 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
+    function makeRequestUUID() {
+
+        // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+        $data = openssl_random_pseudo_bytes(16);
+
+        // Set version to 0100
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        // Set bits 6-7 to 10
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        // Output the 36 character UUID.
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+
+    }
+
     private function extractRequestUUID(array $jsonContents) {
 
-        return array_key_exists('requestUUID', $jsonContents) ? $jsonContents['requestUUID'] : null;
+        return ArrayUtils::get('requestUUID', $jsonContents);
 
     }
 

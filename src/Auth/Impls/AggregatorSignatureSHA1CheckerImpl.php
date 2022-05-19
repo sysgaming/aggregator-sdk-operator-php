@@ -28,9 +28,6 @@ class AggregatorSignatureSHA1CheckerImpl implements AggregatorSignatureChecker
     function validate($request)
     {
 
-        if( true )
-            return;
-
         $payload = $request->getContents();
         $signatureHolder = $request->getSignatureHolder();
 
