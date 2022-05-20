@@ -121,7 +121,7 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
-- `handleBalance(...)`: deve implementar a lógica de busca e retorno do saldo atual do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::balanceFromRequest()`. Esta implementação é opcional, uma vez que a classe abstrata já a implementa:
+- `handleBalance(...)`: deve implementar a lógica de busca e retorno do saldo atual do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::balanceFromRequest()`. Esta implementação é opcional, uma vez que a classe abstrata já a implementa, exemplo:
 
     ```PHP
     function handleBalance(AggregatorBalance $balance, AggregatorPlayerWallet $player) {
@@ -139,7 +139,7 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```    
 
-- `handleBet(...)`: deve implementar a lógica de **débito** de uma aposta do saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::betFromRequest()`;
+- `handleBet(...)`: deve implementar a lógica de **débito** de uma aposta do saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::betFromRequest()`. Exemplo:
 
     ```PHP
     function handleBet(AggregatorBet $bet, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null) {
@@ -168,7 +168,7 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
-- `handleWin(...)`: deve implementar a lógica de **crédito** de uma premiação ao saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::winFromRequest()`;
+- `handleWin(...)`: deve implementar a lógica de **crédito** de uma premiação ao saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::winFromRequest()`. Exemplo;
 
     ```PHP
     function handleWin(AggregatorWin $win, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null) {
@@ -197,7 +197,7 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
-- `handleRollback(...)`: deve implementar a lógica de **cancelamento** de uma determinada transação (quando possível), **crédito** ou **débito** do saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::rollbackFromRequest()`;
+- `handleRollback(...)`: deve implementar a lógica de **cancelamento** de uma determinada transação (quando possível), **crédito** ou **débito** do saldo do jogador. O SDK invoca este método dentro da implementação do `AggregatorController::rollbackFromRequest()`. Exemplo:
 
     ```PHP
     function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null) {
@@ -245,7 +245,7 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
-- `findExistedAggregatorTransaction(...)`: deve buscar e retornar uma transação já existente no banco de dados do Operador. Essa transação existente é responsável por determinar o comportamento adequado de respostas do SDK ao agregador. O SDK invoca este método dentro das implementações `AggregatorController::betFromRequest()`, `AggregatorController::winFromRequest()` e `AggregatorController::rollbackFromRequest()`;
+- `findExistedAggregatorTransaction(...)`: deve buscar e retornar uma transação já existente no banco de dados do Operador. Essa transação existente é responsável por determinar o comportamento adequado de respostas do SDK ao agregador. O SDK invoca este método dentro das implementações `AggregatorController::betFromRequest()`, `AggregatorController::winFromRequest()` e `AggregatorController::rollbackFromRequest()`. Exemplo:
 
     ``` PHP
     function findExistedAggregatorTransaction($transactionId) {
