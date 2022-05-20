@@ -292,6 +292,45 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
+Há também outra interface `PlayerWalletManager` que necessita implementação e é passada como dependência ao construtor da classe abstrata `AggregatorGenericControllerImpl`. São basicamente 2 métodos e o objetivo dela é retornar um `AggregatorPlayerWallet` e o saldo mais recente possível do jogador. Exemplo de implementação:
+
+``` PHP
+class PlayerWalletManagerImpl implements PlayerWalletManager {
+
+    function findPlayerByToken($token) {
+    
+        // busca o jogador/user no banco de dados do operador
+        $wallet = $this->findWalletByToken($token);
+    
+        if( !$user )
+            return null;
+    
+        $playerId = $wallet->getUserId();
+        
+        // se atentar que os valores monetários utilizados pelo SDK são inteiros e multiplicados por 1000000 (Um Milhão). Exemplo: $23.69 é representado por 23690000
+        $playerBalance = $wallet->getBalance();
+        $playerCurrency = $wallet->getCurrency();
+    
+        // OperatorPlayerWalletImpl é uma implementação do Operador que pode extender a classe abstrata base AggregatorPlayerWalletImpl
+        // e implementa os método definidos na interface AggregatorPlayerWallet 
+        return new OperatorPlayerWalletImpl($playerId, $playerBalance, $playerCurrency, $token);
+    
+    }
+    
+    function getFreshBalanceForPlayer(AggregatorPlayerWallet $player) {
+    
+        // busca o jogador/user no banco de dados do operador
+        $wallet = $this->findWalletByPlayerCurrency($player->getId(), $player->getCurrency());
+    
+        // retornar o saldo mais recente do jogador
+        // se atentar que os valores monetários utilizados pelo SDK são inteiros e multiplicados por 1000000 (Um Milhão). Exemplo: $23.69 é representado por 23690000
+        return $wallet->getBalance();
+    
+    }
+    
+}
+``` 
+
 ### Roteamento/Endpoints
 
 **Atenção**: É nessário que o Operador crie/configure rotas/endpoints em sua aplicação de acordo com a Documentação para Operadores (TODO link da doc). E dentro de cada método que aceita as requisições dessas rotas/endpoints o Operador deve utilizar os métodos implementados da interface `AggregatorController` descritos anteriormente. **Este SDK não cria/configura nenhuma rota/endpoint**.
