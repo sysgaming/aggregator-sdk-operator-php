@@ -245,9 +245,52 @@ Uma breve explicação sobre o que cada método deve fazer:
     }
     ```
 
-- `findExistedAggregatorTransaction(...)`: TODO ;
+- `findExistedAggregatorTransaction(...)`: deve buscar e retornar uma transação já existente no banco de dados do Operador. Essa transação existente é responsável por determinar o comportamento adequado de respostas do SDK ao agregador. O SDK invoca este método dentro das implementações `AggregatorController::betFromRequest()`, `AggregatorController::winFromRequest()` e `AggregatorController::rollbackFromRequest()`;
 
-> TODO exemplo
+    ``` PHP
+    function findExistedAggregatorTransaction($transactionId) {
+    
+        // busca por uma transação já existente no banco de dados
+        $transaction = $this->findTransaction($transactionId);
+    
+        if( !$transaction )
+            return null;
+    
+        // transforma/mapeia para a classe AggregatorOperatorTransaction
+        // necessária para o SDK validar corretamente as informações
+        $mappedTransaction = (new AggregatorOperatorTransaction())
+            ->setTransactionId($transactionId)
+            ->setRoundId($transaction->getRoundId())
+            ->setCurrency($transaction->getCurrency())
+            ->setAmount($transaction->getAmount())
+            ->setPlayerId($transaction->getPlayerId())
+            ->setProductCode($transaction->getProductCode())
+        ;
+    
+        // mapeia o tipo da transação caso necessário
+        switch ($transaction->getType()) {
+    
+            case self::OPERATOR_TR_TYPE_WIN:
+                $mappedTransaction->setType(AggregatorOperatorTransaction::TR_TYPE_WIN);
+                break;
+    
+            case self::OPERATOR_TR_TYPE_BET:
+                $mappedTransaction->setType(AggregatorOperatorTransaction::TR_TYPE_BET);
+                break;
+    
+            case self::OPERATOR_TR_TYPE_ROLLBACK:
+                $mappedTransaction->setType(AggregatorOperatorTransaction::TR_TYPE_ROLLBACK);
+                break;
+    
+            default:
+                throw new UnknownGamingException("Invalid existed transaction type");
+    
+        }
+        
+        return $mappedTransaction;
+    
+    }
+    ```
 
 ### Roteamento/Endpoints
 
