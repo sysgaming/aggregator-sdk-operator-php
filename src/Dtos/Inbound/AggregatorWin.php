@@ -12,6 +12,8 @@ class AggregatorWin
     private $amount;
     private $currency;
     private $productCode;
+    private $isFree;
+    private $rewardId;
 
     protected $payload;
 
@@ -156,6 +158,42 @@ class AggregatorWin
     public function setProductCode($productCode)
     {
         $this->productCode = $productCode;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsFree()
+    {
+        return $this->isFree;
+    }
+
+    /**
+     * @param bool $isFree
+     * @return AggregatorWin
+     */
+    public function setIsFree($isFree)
+    {
+        $this->isFree = $isFree;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRewardId()
+    {
+        return $this->rewardId;
+    }
+
+    /**
+     * @param string $rewardId
+     * @return AggregatorWin
+     */
+    public function setRewardId($rewardId)
+    {
+        $this->rewardId = $rewardId;
         return $this;
     }
 

@@ -80,6 +80,8 @@ class AggregatorGamingMapperImpl implements AggregatorGamingMapper
             ->setAmount(ArrayUtils::get('amount', $jsonPayload))
             ->setCurrency(ArrayUtils::get('currency', $jsonPayload))
             ->setProductCode(ArrayUtils::get('productCode', $jsonPayload))
+            ->setIsFree(ArrayUtils::get('isFree', $jsonPayload))
+            ->setRewardId(ArrayUtils::get('rewardId', $jsonPayload))
         ;
 
         $dto->setPayload($payload);
@@ -108,6 +110,8 @@ class AggregatorGamingMapperImpl implements AggregatorGamingMapper
             ->setAmount(ArrayUtils::get('amount', $jsonPayload))
             ->setCurrency(ArrayUtils::get('currency', $jsonPayload))
             ->setProductCode(ArrayUtils::get('productCode', $jsonPayload))
+            ->setIsFree(ArrayUtils::get('isFree', $jsonPayload))
+            ->setRewardId(ArrayUtils::get('rewardId', $jsonPayload))
         ;
 
         $dto->setPayload($payload);
