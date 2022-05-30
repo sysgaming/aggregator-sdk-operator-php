@@ -156,7 +156,7 @@ class AggregatorGamingMapperImpl implements AggregatorGamingMapper
         $statusCode = $response->getStatusCode();
 
         if( $statusCode < 200 || $statusCode >= 300 )
-            throw new UnknownGamingException("Invalid StartPlaying Response");
+            throw new UnknownGamingException("Invalid StartPlaying Response: " . $response->getContents());
 
         $payloadArray = $this->jsonHandler->jsonDecode($response->getContents());
 
