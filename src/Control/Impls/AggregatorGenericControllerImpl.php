@@ -154,7 +154,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
         try {
 
-            $this->getSignatureChecker()->validate($request);
+//            $this->getSignatureChecker()->validate($request);
 
             $player = $this->getPlayerWalletManager()->findPlayerByToken(ArrayUtils::get('token', $jsonContents));
 
@@ -163,9 +163,6 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             if( !$player->canPlay() )
                 throw new UserCantPlayException();
-
-            if( !$player->isAValidCurrency() )
-                throw new CurrencyNotSupportedException();
 
             return $handler($jsonContents, $player);
 
@@ -184,6 +181,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
 
             $dto = $this->getGamingMapper()->balanceFromRequest($jsonContents);
+
+            if( !$player->isAValidCurrency($dto->getCurrency()) )
+                throw new CurrencyNotSupportedException();
 
             return $this->handleBalance($dto, $player);
 
@@ -207,6 +207,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $dto = $this->getGamingMapper()->betFromRequest($jsonContents);
 
+            if( !$player->isAValidCurrency($dto->getCurrency()) )
+                throw new CurrencyNotSupportedException();
+
             if( $player->getBalance() < $dto->getAmount() )
                 throw new NotEnoughMoneyException($player);
 
@@ -221,6 +224,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         return $this->handleRequest($request, function(array $jsonContents, AggregatorPlayerWallet $player) {
 
             $dto = $this->getGamingMapper()->winFromRequest($jsonContents);
+
+            if( !$player->isAValidCurrency($dto->getCurrency()) )
+                throw new CurrencyNotSupportedException();
 
             return $this->handleBetOrWin($dto, $player);
 
@@ -273,7 +279,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             // if already canceled before, then do nothing and return idempotent way
             if( $existedTr->getType() == AggregatorOperatorTransaction::TR_TYPE_ROLLBACK )
-                return $this->makeAggregatorFreshBalanceResponse($tr, $player);
+                return $this->handleAlreadyCanceledTransaction($tr, $player, $existedTr);
 
             else if(
                 $existedTr->getType() == ($tr instanceof AggregatorBet ? AggregatorOperatorTransaction::TR_TYPE_WIN : AggregatorOperatorTransaction::TR_TYPE_BET)
@@ -341,7 +347,11 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
-    private function extractRequestUUID(array $jsonContents) {
+    /**
+     * @param $jsonContents
+     * @return array|null
+     */
+    private function extractRequestUUID($jsonContents) {
 
         return ArrayUtils::get('requestUUID', $jsonContents);
 
