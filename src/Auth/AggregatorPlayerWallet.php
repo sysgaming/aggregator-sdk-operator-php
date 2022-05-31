@@ -32,8 +32,9 @@ interface AggregatorPlayerWallet
     function canPlay();
 
     /**
+     * @param string $currency
      * @return boolean
      */
-    function isAValidCurrency();
+    function isAValidCurrency($currency);
 
 }

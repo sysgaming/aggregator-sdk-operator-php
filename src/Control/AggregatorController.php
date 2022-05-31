@@ -127,6 +127,14 @@ interface AggregatorController {
     function handleTransaction($tr, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
 
     /**
+     * @param $tr AggregatorBet|AggregatorWin
+     * @param AggregatorPlayerWallet $player
+     * @param AggregatorOperatorTransaction|null $existedTr
+     * @return AggregatorBalanceResponse
+     */
+    function handleAlreadyCanceledTransaction($tr, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
+
+    /**
      * @param $tr AggregatorBet|AggregatorWin|AggregatorRollback
      * @param AggregatorPlayerWallet $player
      * @return AggregatorBalanceResponse

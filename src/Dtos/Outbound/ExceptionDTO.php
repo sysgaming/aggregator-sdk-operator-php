@@ -85,10 +85,12 @@ class ExceptionDTO implements AggregatorJsonObject {
 
     function toArray() {
 
-        $acc = [
-            'requestUUID' => $this->getRequestUUID(),
-            'type' => $this->getType(),
-        ];
+        $acc = [];
+
+        if( !is_null($this->getRequestUUID()) )
+            $acc['requestUUID'] = $this->getRequestUUID();
+
+        $acc['type'] = $this->getType();
 
         if( !is_null($this->getMessage()))
             $acc['message'] = $this->getMessage();

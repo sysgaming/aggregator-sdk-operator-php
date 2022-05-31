@@ -26,9 +26,7 @@ class AggregatorExceptionMapperImpl implements AggregatorExceptionMapper
 
             $reflect = new ReflectionClass($exception);
 
-            $dto
-                ->setRequestUUID($requestUUID)
-                ->setType(StringUtils::camelToUnderScore($reflect->getShortName()));
+            $dto->setType(StringUtils::camelToUnderScore($reflect->getShortName()));
 
             if( $exception->getMessage() )
                 $dto->setMessage($exception->getMessage());
@@ -36,11 +34,13 @@ class AggregatorExceptionMapperImpl implements AggregatorExceptionMapper
         } else {
 
             $dto
-                ->setRequestUUID($requestUUID)
                 ->setMessage($exception->getMessage())
                 ->setType("unknown_gaming_exception");
 
         }
+
+        if( !is_null($requestUUID) )
+            $dto->setRequestUUID($requestUUID);
 
         return $dto;
 
