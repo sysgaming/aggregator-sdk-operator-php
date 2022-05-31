@@ -152,14 +152,17 @@ Uma breve explicação sobre o que cada método deve fazer:
         
         $wallet = $this->findUserWallet($player);
         
+        // se uma bet é uma FreeBet deve-se ignorar o valor recebido e NÃO debitar do jogador
+        // mas é interessante identificar no histórico do jogador que houve uma BET e que a mesma se trata de uma FreeBet
         // se atentar que os valores monetários utilizados pelo SDK são inteiros e multiplicados por 1000000 (Um Milhão);
-        $betAmount = $bet->getAmount(); // exemplo: $23.69 é representado por 23690000
+        // exemplo: $23.69 é representado por 23690000
+        $betAmount = $bet->getIsFree() ? 0 : $bet->getAmount(); 
         
         $wallet->setBalance($wallet->getBalance() - $betAmount);
         
         $wallet->save();
       
-        // persiste a transação 
+        // persiste a transação (é uma boa prática armazenar o payload da transação para cruzamento de informações) 
         $this->saveTransaction($bet, $player);
         
         // retorna o saldo atualizado do jogador
@@ -181,14 +184,17 @@ Uma breve explicação sobre o que cada método deve fazer:
         
         $wallet = $this->findUserWallet($player);
         
+        // WINs também podem ser prêmios resultantes de FreeBets 
+        // nesses casos o valor recebido já estarão corretos para creditar o jogador, ou seja LucroBruto - ValorAposta (valor da aposta Freebet)
         // se atentar que os valores monetários utilizados pelo SDK são inteiros e multiplicados por 1000000 (Um Milhão);
-        $winAmount = $win->getAmount(); // exemplo: $23.69 é representado por 23690000
+        // exemplo: $23.69 é representado por 23690000
+        $winAmount = $win->getAmount(); 
         
         $wallet->setBalance($wallet->getBalance() + $winAmount);
         
         $wallet->save();
       
-        // persiste a transação 
+        // persiste a transação (é uma boa prática armazenar o payload da transação para cruzamento de informações)
         $this->saveTransaction($win, $player);
         
         // retorna o saldo atualizado do jogador
@@ -215,7 +221,7 @@ Uma breve explicação sobre o que cada método deve fazer:
             // para que quando a transação que se pretende cancelar chegar 
             // ela NÃO tenha efeito no saldo do jogador, pois leva-se em conta que já existe um cancelamento prévio para ela
             // verifique a implementação do método AggregatorGenericControllerImpl::rollbackFromRequest(...)
-            
+            // * (é uma boa prática armazenar o payload da transação para cruzamento de informações)
             $this->saveRollbackTransaction($rollback, $player);
           
             return $this->makeAggregatorFreshBalanceResponse($tr, $player);
@@ -236,7 +242,7 @@ Uma breve explicação sobre o que cada método deve fazer:
         
         $wallet->save($wallet);
       
-        // cancela a transação 
+        // cancela a transação (é uma boa prática armazenar o payload da transação para cruzamento de informações)
         $this->cancelTransaction($rollback, $player);
         
         // retorna o saldo atualizado do jogador
