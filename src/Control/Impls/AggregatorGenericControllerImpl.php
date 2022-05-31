@@ -154,7 +154,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
         try {
 
-//            $this->getSignatureChecker()->validate($request);
+            $this->getSignatureChecker()->validate($request);
 
             $player = $this->getPlayerWalletManager()->findPlayerByToken(ArrayUtils::get('token', $jsonContents));
 
