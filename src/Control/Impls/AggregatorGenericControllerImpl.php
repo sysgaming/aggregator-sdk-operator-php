@@ -210,7 +210,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
             if( !$player->isAValidCurrency($dto->getCurrency()) )
                 throw new CurrencyNotSupportedException();
 
-            if( $player->getBalance() < $dto->getAmount() )
+            if( !$dto->getIsFree() && $player->getBalance() < $dto->getAmount() )
                 throw new NotEnoughMoneyException($player);
 
             return $this->handleBetOrWin($dto, $player);
