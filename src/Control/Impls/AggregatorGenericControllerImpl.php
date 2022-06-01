@@ -299,6 +299,10 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
+    function handleAlreadyCanceledTransaction($tr, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null) {
+        return $this->makeAggregatorFreshBalanceResponse($tr, $player);
+    }
+
     function handleTransaction($tr, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null) {
 
         if( $tr instanceof AggregatorBet )
