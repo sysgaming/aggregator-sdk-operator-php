@@ -24,8 +24,9 @@ use Sysgaming\AggregatorSdkPhp\Exceptions\CurrencyNotSupportedException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\InvalidTokenException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\NotEnoughMoneyException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\TransactionConflictException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\UnavailablePlayerException;
 use Sysgaming\AggregatorSdkPhp\Exceptions\UnknownGamingException;
-use Sysgaming\AggregatorSdkPhp\Exceptions\UserCantPlayException;
+use Sysgaming\AggregatorSdkPhp\Exceptions\PlayerCantPlayException;
 use Sysgaming\AggregatorSdkPhp\Helpers\ArrayUtils;
 use Sysgaming\AggregatorSdkPhp\Helpers\Base64Handler;
 use Sysgaming\AggregatorSdkPhp\Helpers\JsonHandler;
@@ -162,7 +163,10 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
                 throw new InvalidTokenException();
 
             if( !$player->canPlay() )
-                throw new UserCantPlayException();
+                throw new PlayerCantPlayException();
+
+            if( !$player->isAvailable() )
+                throw new UnavailablePlayerException();
 
             return $handler($jsonContents, $player);
 

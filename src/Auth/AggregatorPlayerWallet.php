@@ -32,6 +32,11 @@ interface AggregatorPlayerWallet
     function canPlay();
 
     /**
+     * @return boolean
+     */
+    function isAvailable();
+
+    /**
      * @param string $currency
      * @return boolean
      */

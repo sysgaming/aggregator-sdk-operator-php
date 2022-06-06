@@ -2,10 +2,10 @@
 
 namespace Sysgaming\AggregatorSdkPhp\Exceptions;
 
-class UserCantPlayException extends AggregatorGamingException {
+class UnavailablePlayerException extends AggregatorGamingException {
 
     /**
-     * UserCantPlayException constructor.
+     * UnavailableUserException constructor.
      * @param string $message
      */
     public function __construct($message = "")

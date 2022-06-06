@@ -72,4 +72,16 @@ abstract class AggregatorPlayerWalletImpl implements AggregatorPlayerWallet
         return $this->token;
     }
 
+    function canPlay() {
+        return true;
+    }
+
+    function isAvailable() {
+        return true;
+    }
+
+    function isAValidCurrency($currency) {
+        return false;
+    }
+
 }
