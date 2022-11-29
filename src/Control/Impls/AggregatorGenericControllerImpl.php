@@ -322,6 +322,9 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     }
 
+    function loginPage() {
+        return '<html lang="en"><body><form method="post"><input type="text" placeholder="user"/><br/><input type="text" placeholder="password"/><br/><input type="submit" value="submit"/></form></body></html>';
+    }
 
     function makeAggregatorFreshBalanceResponse($tr, AggregatorPlayerWallet $player) {
 

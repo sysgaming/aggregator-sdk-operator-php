@@ -71,6 +71,11 @@ class AggregatorStartPlaying implements AggregatorJsonObject {
     private $redirectURLs;
 
     /**
+     * @var boolean
+     */
+    private $openedByLogin;
+
+    /**
      * @return string
      */
     public function getRequestUUID()
@@ -286,6 +291,24 @@ class AggregatorStartPlaying implements AggregatorJsonObject {
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isOpenedByLogin()
+    {
+        return $this->openedByLogin;
+    }
+
+    /**
+     * @param bool $openedByLogin
+     * @return AggregatorStartPlaying
+     */
+    public function setOpenedByLogin($openedByLogin)
+    {
+        $this->openedByLogin = $openedByLogin;
+        return $this;
+    }
+
     function toArray() {
 
         $acc = [];
@@ -326,9 +349,11 @@ class AggregatorStartPlaying implements AggregatorJsonObject {
         if( !is_null($this->getRedirectURLs()) )
             $acc['redirectURLs'] = $this->getRedirectURLs()->toArray();
 
+        if( !is_null($this->isOpenedByLogin()) )
+            $acc['openedByLogin'] = $this->isOpenedByLogin();
+
         return $acc;
 
     }
-
 
 }

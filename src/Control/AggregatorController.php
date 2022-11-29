@@ -113,6 +113,11 @@ interface AggregatorController {
     function handleRollback(AggregatorRollback $rollback, AggregatorPlayerWallet $player, AggregatorOperatorTransaction $existedTr = null);
 
     /**
+     * @return mixed uma página de login como a que o jogador está acostumado a ver/usá-la no operador
+     */
+    function loginPage();
+
+    /**
      * @param $transactionId string
      * @return AggregatorOperatorTransaction
      */
