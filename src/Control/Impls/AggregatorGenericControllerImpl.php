@@ -157,7 +157,7 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
             $this->getSignatureChecker()->validate($request);
 
-            $player = $this->getPlayerWalletManager()->findPlayerByToken(ArrayUtils::get('token', $jsonContents));
+            $player = $this->getPlayerWalletManager()->findPlayerByToken(ArrayUtils::get('token', $jsonContents), ArrayUtils::get('productCode', $jsonContents));
 
             if( !$player )
                 throw new InvalidTokenException();
@@ -331,15 +331,15 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
         return new AggregatorBalanceResponse(
             $tr->getRequestUUID(),
             $player->getCurrency(),
-            $this->getFreshBalance($player)
+            $this->getFreshBalance($player, $tr->getProductCode())
         );
 
     }
 
-    protected function getFreshBalance($player) {
+    protected function getFreshBalance($player, $gameCode) {
 
         return $this->getPlayerWalletManager()
-            ->getFreshBalanceForPlayer($player);
+            ->getFreshBalanceForPlayer($player, $gameCode);
 
     }
 
