@@ -328,10 +328,13 @@ abstract class AggregatorGenericControllerImpl implements AggregatorController
 
     function makeAggregatorFreshBalanceResponse($tr, AggregatorPlayerWallet $player) {
 
+        $ts = time();
+
         return new AggregatorBalanceResponse(
             $tr->getRequestUUID(),
             $player->getCurrency(),
-            $this->getFreshBalance($player, $tr->getProductCode())
+            $this->getFreshBalance($player, $tr->getProductCode()),
+            $ts
         );
 
     }
