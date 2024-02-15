@@ -30,6 +30,19 @@ class AggregatorStartPlaying implements AggregatorJsonObject {
      */
     private $playerName;
 
+
+    /**
+     * @var boolean
+     */
+    private $playerIsReal = true;
+
+
+    /**
+     * @var boolean
+     */
+    private $participateOnPromoCampaigns = false;
+
+
     /**
      * @var string
      */
@@ -144,6 +157,42 @@ class AggregatorStartPlaying implements AggregatorJsonObject {
     public function setPlayerName($playerName)
     {
         $this->playerName = $playerName;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getPlayerIsReal()
+    {
+        return $this->playerIsReal;
+    }
+
+    /**
+     * @param bool $playerIsReal
+     * @return AggregatorStartPlaying
+     */
+    public function setPlayerIsReal(bool $playerIsReal)
+    {
+        $this->playerIsReal = $playerIsReal;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getParticipateOnPromoCampaigns()
+    {
+        return $this->participateOnPromoCampaigns;
+    }
+
+    /**
+     * @param bool $participateOnPromoCampaigns
+     * @return AggregatorStartPlaying
+     */
+    public function setParticipateOnPromoCampaigns($participateOnPromoCampaigns)
+    {
+        $this->participateOnPromoCampaigns = $participateOnPromoCampaigns;
         return $this;
     }
 
@@ -324,6 +373,9 @@ class AggregatorStartPlaying implements AggregatorJsonObject {
 
         if( !is_null($this->getPlayerName()) )
             $acc['playerName'] = $this->getPlayerName();
+
+        $acc['playerIsReal'] = $this->getPlayerIsReal();
+        $acc['participateOnPromoCampaigns'] = $this->getParticipateOnPromoCampaigns();
 
         if( !is_null($this->getToken()) )
             $acc['token'] = $this->getToken();
