@@ -10,6 +10,7 @@ class AggregatorWin
     private $playerId;
     private $roundId;
     private $amount;
+    private $promoAmount;
     private $currency;
     private $productCode;
     private $isFree;
@@ -122,6 +123,24 @@ class AggregatorWin
     public function setAmount($amount)
     {
         $this->amount = $amount;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPromoAmount()
+    {
+        return $this->promoAmount;
+    }
+
+    /**
+     * @param mixed $promoAmount
+     * @return AggregatorWin
+     */
+    public function setPromoAmount($promoAmount)
+    {
+        $this->promoAmount = $promoAmount;
         return $this;
     }
 

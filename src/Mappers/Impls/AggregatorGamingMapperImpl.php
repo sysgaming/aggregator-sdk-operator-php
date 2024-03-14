@@ -108,6 +108,7 @@ class AggregatorGamingMapperImpl implements AggregatorGamingMapper
             ->setPlayerId(ArrayUtils::get('playerId', $jsonPayload))
             ->setRoundId(ArrayUtils::get('roundId', $jsonPayload))
             ->setAmount(ArrayUtils::get('amount', $jsonPayload))
+            ->setAmount(ArrayUtils::get('promoAmount', $jsonPayload))
             ->setCurrency(ArrayUtils::get('currency', $jsonPayload))
             ->setProductCode(ArrayUtils::get('productCode', $jsonPayload))
             ->setIsFree(ArrayUtils::get('isFree', $jsonPayload))
