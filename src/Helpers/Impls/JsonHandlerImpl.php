@@ -35,7 +35,7 @@ class JsonHandlerImpl implements JsonHandler
 
     }
 
-        /**
+    /**
      * Convert data to UTF-8 encoding
      *
      * @param mixed $data
