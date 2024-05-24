@@ -18,6 +18,8 @@ class JsonHandlerImpl implements JsonHandler
         if( $value instanceof AggregatorJsonObject )
             $value = $value->toArray();
 
+        $value = $this->convertToUtf8($value);
+
         return json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
     }
@@ -31,5 +33,27 @@ class JsonHandlerImpl implements JsonHandler
 
         return json_decode($raw, true);
 
+    }
+
+        /**
+     * Convert data to UTF-8 encoding
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    private function convertToUtf8($data)
+    {
+        if (is_string($data)) {
+            return mb_convert_encoding($data, 'UTF-8', 'auto');
+        } elseif (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->convertToUtf8($value);
+            }
+        } elseif (is_object($data)) {
+            foreach ($data as $key => $value) {
+                $data->$key = $this->convertToUtf8($value);
+            }
+        }
+        return $data;
     }
 }
