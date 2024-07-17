@@ -25,15 +25,22 @@ abstract class AggregatorPlayerWalletImpl implements AggregatorPlayerWallet
     private $token;
 
     /**
+     * @var string|null
+     */
+    private $externalId;
+
+    /**
      * AggregatorPlayerWalletImpl constructor.
      * @param $id
      * @param int $balance
      * @param string $currency
      * @param string $token
+     * @param null|string $externalId
      */
-    public function __construct($id, $balance, $currency, $token)
+    public function __construct($id, $balance, $currency, $token, $externalId = null)
     {
         $this->id = $id;
+        $this->externalId = $externalId;
         $this->balance = $balance;
         $this->currency = $currency;
         $this->token = $token;
@@ -46,6 +53,11 @@ abstract class AggregatorPlayerWalletImpl implements AggregatorPlayerWallet
     public function getId()
     {
         return $this->id;
+    }
+
+    function getExternalId()
+    {
+        return $this->externalId;
     }
 
     /**

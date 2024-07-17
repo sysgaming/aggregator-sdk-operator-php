@@ -8,6 +8,7 @@ class AggregatorBet
     private $transactionId;
     private $token;
     private $playerId;
+    private $externalPlayerId;
     private $roundId;
     private $amount;
     private $currency;
@@ -86,6 +87,24 @@ class AggregatorBet
     public function setPlayerId($playerId)
     {
         $this->playerId = $playerId;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExternalPlayerId()
+    {
+        return $this->externalPlayerId;
+    }
+
+    /**
+     * @param mixed $externalPlayerId
+     * @return AggregatorBet
+     */
+    public function setExternalPlayerId($externalPlayerId)
+    {
+        $this->externalPlayerId = $externalPlayerId;
         return $this;
     }
 

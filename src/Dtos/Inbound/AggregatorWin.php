@@ -8,6 +8,7 @@ class AggregatorWin
     private $transactionId;
     private $token;
     private $playerId;
+    private $externalPlayerId;
     private $roundId;
     private $amount;
     private $promoAmount;
@@ -87,6 +88,24 @@ class AggregatorWin
     public function setPlayerId($playerId)
     {
         $this->playerId = $playerId;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExternalPlayerId()
+    {
+        return $this->externalPlayerId;
+    }
+
+    /**
+     * @param mixed $externalPlayerId
+     * @return AggregatorWin
+     */
+    public function setExternalPlayerId($externalPlayerId)
+    {
+        $this->externalPlayerId = $externalPlayerId;
         return $this;
     }
 

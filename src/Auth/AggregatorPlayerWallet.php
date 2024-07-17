@@ -11,6 +11,11 @@ interface AggregatorPlayerWallet
     function getId();
 
     /**
+     * @return string The id on the Aggregator/Provider Side
+     */
+    function getExternalId();
+
+    /**
      * @return int The current balance of the player in operator.
      * Attempt that balance must be represented by a Int64/Long. Ex.: $ 23.69 must be represented by 23690000
      */
